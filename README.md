@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # kasirapp2
 
 A new Flutter project.
@@ -14,3 +15,7 @@ A few resources to get you started if this is your first Flutter project:
 For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
+=======
+# flutter-kasir
+apilkasi kasir menggunakan flutter
+>>>>>>> 11f3ec44e528b6c2aad520d34877cd5ff61f767a
