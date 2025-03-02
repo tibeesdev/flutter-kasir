@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-
 // card informasi transaks berisi pengeluaran, pemasukan dan total
 // class dipanggi di transaction_page
 class dataTransaksi extends StatelessWidget {

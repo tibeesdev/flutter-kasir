@@ -101,6 +101,104 @@ class _TransactionPageState extends State<TransactionPage> {
               ),
             ),
 
+            // list barang
+            // terdiri dari nama di bawahnya ada id, disampingnya ada harga jual di bagian kanan ada tombol tambah dan kurang
+            Flexible(
+              child: ListView.builder(
+                itemCount: 10,
+                itemBuilder: (context, index) {
+                  return Container(
+                    margin: EdgeInsets.all(1),
+                    constraints: BoxConstraints(maxHeight: 65, minHeight: 50),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      shape: BoxShape.rectangle,
+                      color: Color.fromARGB(255, 255, 255, 255),
+                      border: Border.all(color: Color(0xFF6e8aff), width: 2),
+                    ),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        // nama barang dan id
+                        Expanded(
+                          flex: 20,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              // nama barang
+                              Container(
+                                padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
+                                child: Text(
+                                  'nama barang $index',
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w500,
+                                    overflow: TextOverflow.clip,
+                                  ),
+                                ),
+                              ),
+
+                              // id transaksi
+                              Container(
+                                padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
+                                child: Text(
+                                  'id barang $index',
+                                  style: TextStyle(
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        // harga baranga
+                        Expanded(
+                          flex: 20,
+                          child: Center(
+                            child: Text(
+                              'harga $index',
+                              style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                        ),
+
+                        // jumlah item
+                        Expanded(
+                          flex: 20,
+                          child: Center(
+                            child: Row(
+                              children: [
+                                IconButton(
+                                  onPressed: () {},
+                                  icon: Icon(Icons.minimize),
+                                ),
+                                TextFormField(
+                                  controller: TextEditingController(
+                                    text: '$index',
+                                  ),
+                                ),
+                                IconButton(
+                                  onPressed: () {},
+                                  icon: Icon(Icons.add),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+            ),
+
             // debug
             Text(catatan_transaksi.text.toString()),
             Text(cari_barang.text.toString()),
