@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'widgets_assets/transaction_page_widget.dart';
 
@@ -9,22 +11,32 @@ class TransactionPage extends StatefulWidget {
 }
 
 class _TransactionPageState extends State<TransactionPage> {
+  // inisiasi tanggal awal
   DateTime? _selectedDate = DateTime.now();
+  // contorller
+  TextEditingController catatan_transaksi = TextEditingController();
+  TextEditingController cari_barang = TextEditingController();
 
-  // fungsi untuk datepicker
-  Future<void> _selectDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: _selectedDate ?? DateTime.now(),
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2100),
-    );
+  // fungsi callback
+  // callback text cari barang
+  void onUpdateCariBarang(String nilai_cari_barang) {
+    setState(() {
+      cari_barang.text = nilai_cari_barang;
+    });
+  }
 
-    if (picked != null && picked != _selectedDate) {
-      setState(() {
-        _selectedDate = picked;
-      });
-    }
+  //callback catatan transaksi
+  void onUpdateCatatanTransaksi(String nilai_catatan_transaksi) {
+    setState(() {
+      catatan_transaksi.text = nilai_catatan_transaksi;
+    });
+  }
+
+  //callback tanggal transaksi
+  void onUpdateSelectDate(DateTime nilai_tanggal_baru) {
+    setState(() {
+      _selectedDate = nilai_tanggal_baru;
+    });
   }
 
   @override
@@ -67,6 +79,7 @@ class _TransactionPageState extends State<TransactionPage> {
             // card informasi total penjualan
             Padding(
               padding: EdgeInsets.all(5),
+              // mengambil class dari transaction_page_widget.dart
               child: dataTransaksi(
                 screenWidth: screenWidth,
                 total_modal: total_modal,
@@ -78,119 +91,20 @@ class _TransactionPageState extends State<TransactionPage> {
             // card input catatan, kode, dan tanggal transaksi
             Padding(
               padding: EdgeInsets.all(5),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Color(0xFFbfcfff),
-                  border: Border.all(color: Color(0xFF6e8aff), width: 2),
-                  shape: BoxShape.rectangle,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                constraints: BoxConstraints(
-                  minHeight: 180,
-                  maxWidth: screenWidth - 20,
-                ),
-                child: Column(
-                  children: [
-                    // bagian atas
-                    Padding(
-                      padding: EdgeInsets.all(1),
-                      child: Container(
-                        //margin: EdgeInsets.all(5),
-                        alignment: Alignment.center,
-                        //color: const Color.fromARGB(255, 255, 255, 255),
-                        constraints: BoxConstraints(
-                          minHeight: 80,
-                          maxHeight: 80,
-                          maxWidth: screenWidth - 20,
-                        ),
-
-                        child: TextFormField(
-                          decoration: InputDecoration(
-                            isDense: true,
-                            constraints: BoxConstraints(
-                              maxWidth: screenWidth - 30,
-                              maxHeight: 90,
-                            ),
-
-                            contentPadding: EdgeInsets.all(20),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            labelText: 'catatan transaksi',
-                            prefixIcon: Icon(Icons.edit_note_outlined),
-                            filled: true,
-                            fillColor: Colors.white,
-                          ),
-                        ),
-                      ),
-                    ),
-
-                    // bagian bawah
-                    Container(
-                      //margin: EdgeInsets.all(1),
-                      padding: EdgeInsets.all(5),
-                      alignment: Alignment.center,
-                      constraints: BoxConstraints(
-                        minWidth: screenWidth - 20,
-                        minHeight: 70,
-                      ),
-                      //color: Colors.amber,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          // container id transaksi
-                          Container(
-                            alignment: Alignment.center,
-                            //padding: EdgeInsets.all(5),
-                            constraints: BoxConstraints(
-                              maxWidth: screenWidth / 2,
-                              maxHeight: 50,
-                            ),
-                            child: TextFormField(
-                              decoration: InputDecoration(
-                                isDense: false,
-
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                labelText: 'id transaksi',
-                                prefixIcon: Icon(Icons.edit_note_outlined),
-                                filled: true,
-                                fillColor: Colors.white,
-                              ),
-                            ),
-                          ),
-
-                          // container berisi tgl transaksi
-                          Container(
-                            alignment: Alignment.center,
-                            //padding: EdgeInsets.all(1),
-                            constraints: BoxConstraints(
-                              maxHeight: 50,
-                              maxWidth: screenWidth / 2 - 80,
-                            ),
-
-                            //color: Colors.red,
-                            child: MaterialButton(
-                              color: Colors.white,
-                              elevation: 5,
-                              minWidth: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height,
-
-                              onPressed: () => _selectDate(context),
-                              child: Text(
-                                '${_selectedDate.toString().split(' ')[0]}',
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
+              child: DetailTransaksi(
+                screenWidth: screenWidth,
+                catatan_transaksi: catatan_transaksi,
+                cari_barang: cari_barang,
+                onUpdateCariBarang: onUpdateCariBarang,
+                onUpdateCatatanTransaksi: onUpdateCatatanTransaksi,
+                onUpdateSelectDate: onUpdateSelectDate,
               ),
             ),
+
+            // debug
+            Text(catatan_transaksi.text.toString()),
+            Text(cari_barang.text.toString()),
+            Text(_selectedDate.toString()),
           ],
         ),
       ),

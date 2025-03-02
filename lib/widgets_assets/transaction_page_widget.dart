@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+
+// card informasi transaks berisi pengeluaran, pemasukan dan total
+// class dipanggi di transaction_page
 class dataTransaksi extends StatelessWidget {
   const dataTransaksi({
     super.key,
@@ -141,6 +144,188 @@ class dataTransaksi extends StatelessWidget {
                         total_keuntungan_bersih < 0 ? Colors.red : Colors.green,
                     fontWeight: FontWeight.w800,
                     fontSize: 20,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// widget untuk bagian catatan transaski, tanggal transaksi, dan cari barang
+
+class DetailTransaksi extends StatefulWidget {
+  DetailTransaksi({
+    super.key,
+    required this.screenWidth,
+    required this.catatan_transaksi,
+    required this.cari_barang,
+    required this.onUpdateCariBarang,
+    required this.onUpdateCatatanTransaksi,
+    required this.onUpdateSelectDate,
+  });
+  // controller
+  TextEditingController catatan_transaksi;
+  TextEditingController cari_barang;
+
+  // lebar layar
+  double screenWidth;
+
+  // fungsi call back untuk ambil data
+  final Function(String) onUpdateCatatanTransaksi;
+  final Function(String) onUpdateCariBarang;
+  final Function(DateTime) onUpdateSelectDate;
+
+  @override
+  State<DetailTransaksi> createState() => _DetailTransaksiState();
+}
+
+class _DetailTransaksiState extends State<DetailTransaksi> {
+  // inisiasi tanggal awal
+  DateTime? _selectedDate = DateTime.now();
+  // fungsi untuk datepicker
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: _selectedDate ?? DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2100),
+    );
+
+    if (picked != null && picked != _selectedDate) {
+      widget.onUpdateSelectDate(picked);
+      setState(() {
+        _selectedDate = picked;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Color(0xFFbfcfff),
+        border: Border.all(color: Color(0xFF6e8aff), width: 2),
+        shape: BoxShape.rectangle,
+        borderRadius: BorderRadius.circular(10),
+      ),
+      constraints: BoxConstraints(
+        minHeight: 180,
+        maxWidth: widget.screenWidth - 20,
+      ),
+      child: Column(
+        children: [
+          // bagian atas
+          // catatan transaksi
+          Padding(
+            padding: EdgeInsets.all(1),
+            child: Container(
+              //margin: EdgeInsets.all(5),
+              alignment: Alignment.center,
+              //color: const Color.fromARGB(255, 255, 255, 255),
+              constraints: BoxConstraints(
+                minHeight: 80,
+                maxHeight: 80,
+                maxWidth: widget.screenWidth - 20,
+              ),
+              // texformfielc catatan transaksi
+              child: TextFormField(
+                controller: widget.catatan_transaksi,
+                onChanged: (value) {
+                  widget.onUpdateCatatanTransaksi(value);
+                  setState(() {
+                    widget.catatan_transaksi.text = value.toString();
+                  });
+                },
+                decoration: InputDecoration(
+                  isDense: true,
+                  constraints: BoxConstraints(
+                    maxWidth: widget.screenWidth - 30,
+                    maxHeight: 90,
+                  ),
+
+                  contentPadding: EdgeInsets.all(20),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  labelText: 'catatan transaksi',
+                  prefixIcon: Icon(Icons.edit_note_outlined),
+                  filled: true,
+                  fillColor: Colors.white,
+                ),
+              ),
+            ),
+          ),
+
+          // bagian bawah
+          // terbagi menjadi tanggal transaksi dan textform cari barang
+          Container(
+            //margin: EdgeInsets.all(1),
+            padding: EdgeInsets.all(5),
+            alignment: Alignment.center,
+            constraints: BoxConstraints(
+              minWidth: widget.screenWidth - 20,
+              minHeight: 70,
+            ),
+            //color: Colors.amber,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                // container berisi tgl transaksi
+                Container(
+                  alignment: Alignment.center,
+                  //padding: EdgeInsets.all(1),
+                  constraints: BoxConstraints(
+                    maxHeight: 50,
+                    maxWidth: widget.screenWidth / 2 - 80,
+                  ),
+
+                  //color: Colors.red,
+                  child: MaterialButton(
+                    color: Colors.white,
+                    elevation: 5,
+                    minWidth: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.height,
+
+                    onPressed: () => _selectDate(context),
+                    child: Text('${_selectedDate.toString().split(' ')[0]}'),
+                  ),
+                ),
+
+                // container cari barang
+                Container(
+                  alignment: Alignment.center,
+                  //padding: EdgeInsets.all(5),
+                  constraints: BoxConstraints(
+                    maxWidth: widget.screenWidth / 2,
+                    maxHeight: 50,
+                  ),
+
+                  // textform cari barang
+                  child: TextFormField(
+                    controller: widget.cari_barang,
+                    onChanged: (value) {
+                      // panggil fungsi update
+                      widget.onUpdateCariBarang(value);
+                      setState(() {
+                        widget.cari_barang.text = value.toString();
+                      });
+                    },
+                    decoration: InputDecoration(
+                      isDense: false,
+
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      labelText: 'cari barang',
+                      prefixIcon: Icon(Icons.search_outlined),
+                      filled: true,
+                      fillColor: Colors.white,
+                    ),
                   ),
                 ),
               ],
