@@ -335,3 +335,119 @@ class _DetailTransaksiState extends State<DetailTransaksi> {
     );
   }
 }
+
+// custom tabbar
+
+class cutomTabBar extends StatelessWidget {
+  const cutomTabBar({super.key, required this.screenWidth});
+
+  final double screenWidth;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      constraints: BoxConstraints(
+        minHeight: 40,
+        maxHeight: 60,
+        maxWidth: screenWidth - 10,
+      ),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(30),
+          topRight: Radius.circular(30),
+        ),
+        shape: BoxShape.rectangle,
+        color: Color(0xFF6e8aff),
+      ),
+      // bagi tabbar menjadi 3 bagian
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          // tombol sebelah kiri
+          Padding(
+            padding: EdgeInsets.all(10),
+            child: Container(
+              alignment: AlignmentDirectional.center,
+              constraints: BoxConstraints(
+                maxWidth: screenWidth / 3,
+                minWidth: screenWidth / 3,
+                minHeight: 50,
+              ),
+              decoration: BoxDecoration(
+                color: Color.fromARGB(33, 255, 255, 255),
+                shape: BoxShape.rectangle,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Text(
+                'kasir',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ),
+
+          // tombol tambah di bagian tengah
+          Transform.translate(
+            offset: Offset(0, -20),
+            transformHitTests: true,
+            child: Container(
+              alignment: Alignment.center,
+              width: 80,
+              padding: EdgeInsets.all(5),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.white,
+              ),
+              child: FloatingActionButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return AlertDialog(
+                          content: Text('data disimpan'),
+                        );
+                      },
+                    ),
+                  );
+                },
+                shape: CircleBorder(),
+                backgroundColor: Color(0xFF6e8aff),
+                foregroundColor: Colors.white,
+                child: Icon(Icons.add),
+              ),
+            ),
+          ),
+
+          // tombol sebelah kanan'
+          Padding(
+            padding: EdgeInsets.all(10),
+            child: Container(
+              alignment: AlignmentDirectional.center,
+              constraints: BoxConstraints(
+                maxWidth: screenWidth / 3,
+                minWidth: screenWidth / 3,
+                minHeight: 50,
+              ),
+              decoration: BoxDecoration(
+                color: Color.fromARGB(33, 255, 255, 255),
+                shape: BoxShape.rectangle,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Text(
+                'Stok barang',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

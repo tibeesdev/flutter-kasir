@@ -203,6 +203,8 @@ class _TransactionPageState extends State<TransactionPage> {
             Text(catatan_transaksi.text.toString()),
             Text(cari_barang.text.toString()),
             Text(_selectedDate.toString()),
+
+            cutomTabBar(screenWidth: screenWidth),
           ],
         ),
       ),
