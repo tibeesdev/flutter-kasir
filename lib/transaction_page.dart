@@ -13,9 +13,12 @@ class TransactionPage extends StatefulWidget {
 class _TransactionPageState extends State<TransactionPage> {
   // inisiasi tanggal awal
   DateTime? _selectedDate = DateTime.now();
-  // contorller
+  // controller
   TextEditingController catatan_transaksi = TextEditingController();
   TextEditingController cari_barang = TextEditingController();
+  List<TextEditingController> items_controllers =
+      []; // controller untuk list barang
+  List data = List.generate(10, (index) => index += 1);
 
   // fungsi callback
   // callback text cari barang
@@ -37,6 +40,18 @@ class _TransactionPageState extends State<TransactionPage> {
     setState(() {
       _selectedDate = nilai_tanggal_baru;
     });
+  }
+
+  // pembuatan controller ketika data dimuat
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    // membuat controller dummy
+    items_controllers = List.generate(
+      data.length,
+      (index) => TextEditingController(text: index.toString()),
+    );
   }
 
   @override
@@ -105,8 +120,11 @@ class _TransactionPageState extends State<TransactionPage> {
             // terdiri dari nama di bawahnya ada id, disampingnya ada harga jual di bagian kanan ada tombol tambah dan kurang
             Flexible(
               child: ListView.builder(
-                itemCount: 10,
+                itemCount: data.length,
                 itemBuilder: (context, index) {
+                  // buat variabel baru untuk controller
+                  TextEditingController item_controller =
+                      items_controllers[index];
                   return Container(
                     margin: EdgeInsets.all(1),
                     constraints: BoxConstraints(maxHeight: 65, minHeight: 50),
@@ -155,7 +173,7 @@ class _TransactionPageState extends State<TransactionPage> {
                           ),
                         ),
 
-                        // harga baranga
+                        // harga barang
                         Expanded(
                           flex: 20,
                           child: Center(
@@ -175,18 +193,72 @@ class _TransactionPageState extends State<TransactionPage> {
                           child: Center(
                             child: Row(
                               children: [
-                                IconButton(
-                                  onPressed: () {},
-                                  icon: Icon(Icons.minimize),
-                                ),
-                                TextFormField(
-                                  controller: TextEditingController(
-                                    text: '$index',
+                                // tombol kurang
+                                Expanded(
+                                  flex: 1,
+                                  child: IconButton(
+                                    onPressed: () {
+                                      // ubah menjadi int
+                                      if (int.tryParse(item_controller.text) ==
+                                          null) {
+                                        item_controller.text = '0';
+                                      }
+                                      ;
+                                      // kurangi angka
+                                      int item_kurang =
+                                          int.parse(item_controller.text) - 1;
+                                      // masukkan ke controller
+                                      setState(() {
+                                        item_controller.text =
+                                            item_kurang.toString();
+                                      });
+                                    },
+                                    icon: Icon(Icons.remove),
                                   ),
                                 ),
-                                IconButton(
-                                  onPressed: () {},
-                                  icon: Icon(Icons.add),
+
+                                // formfield untuk jumlah barang
+                                Expanded(
+                                  flex: 2,
+                                  child: TextField(
+                                    controller: item_controller,
+                                    textAlign: TextAlign.center,
+                                    keyboardType:
+                                        TextInputType
+                                            .number, // Untuk input angka
+                                    decoration: InputDecoration(
+                                      border: OutlineInputBorder(),
+                                    ),
+                                    onChanged: (value) {
+                                      setState(() {
+                                        item_controller.text = value;
+                                      });
+                                    },
+                                  ),
+                                ),
+
+                                // tombol tambah
+                                Expanded(
+                                  flex: 1,
+                                  child: IconButton(
+                                    onPressed: () {
+                                      // ubah menjadi int
+                                      if (int.tryParse(item_controller.text) ==
+                                          null) {
+                                        item_controller.text = '0';
+                                      }
+                                      ;
+                                      // tambah angka
+                                      int item_kurang =
+                                          int.parse(item_controller.text) + 1;
+                                      // masukkan ke controller
+                                      setState(() {
+                                        item_controller.text =
+                                            item_kurang.toString();
+                                      });
+                                    },
+                                    icon: Icon(Icons.add),
+                                  ),
                                 ),
                               ],
                             ),
@@ -200,10 +272,9 @@ class _TransactionPageState extends State<TransactionPage> {
             ),
 
             // debug
-            Text(catatan_transaksi.text.toString()),
-            Text(cari_barang.text.toString()),
-            Text(_selectedDate.toString()),
-
+            // Text(items_controllers[0].text.toString()),
+            // Text(cari_barang.text.toString()),
+            // Text(_selectedDate.toString()),
             cutomTabBar(screenWidth: screenWidth),
           ],
         ),

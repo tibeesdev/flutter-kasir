@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kasirapp2/main.dart';
 
 // card informasi transaks berisi pengeluaran, pemasukan dan total
 // class dipanggi di transaction_page
@@ -365,31 +366,35 @@ class cutomTabBar extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           // tombol sebelah kiri
+          // tombol kasir untuk kembali ke menu kasir
           Padding(
             padding: EdgeInsets.all(10),
-            child: Container(
-              alignment: AlignmentDirectional.center,
-              constraints: BoxConstraints(
-                maxWidth: screenWidth / 3,
-                minWidth: screenWidth / 3,
-                minHeight: 50,
-              ),
-              decoration: BoxDecoration(
-                color: Color.fromARGB(33, 255, 255, 255),
-                shape: BoxShape.rectangle,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Text(
-                'kasir',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
+            child: GestureDetector(
+              onTap: () => Navigator.pop(context),
+              child: Container(
+                alignment: AlignmentDirectional.center,
+                constraints: BoxConstraints(
+                  maxWidth: screenWidth / 3,
+                  minWidth: screenWidth / 3,
+                  minHeight: 50,
+                ),
+                decoration: BoxDecoration(
+                  color: Color.fromARGB(33, 255, 255, 255),
+                  shape: BoxShape.rectangle,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Text(
+                  'kasir',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ),
           ),
 
-          // tombol tambah di bagian tengah
+          // tombol tambah di bagian tengah untuk simpan transaksi
           Transform.translate(
             offset: Offset(0, -20),
             transformHitTests: true,
@@ -402,18 +407,7 @@ class cutomTabBar extends StatelessWidget {
                 color: Colors.white,
               ),
               child: FloatingActionButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) {
-                        return AlertDialog(
-                          content: Text('data disimpan'),
-                        );
-                      },
-                    ),
-                  );
-                },
+                onPressed: () {},
                 shape: CircleBorder(),
                 backgroundColor: Color(0xFF6e8aff),
                 foregroundColor: Colors.white,
