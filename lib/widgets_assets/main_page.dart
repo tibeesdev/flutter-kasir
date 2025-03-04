@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kasirapp2/transaction_page.dart';
+import 'package:kasirapp2/producs_input_page.dart';
 
 // widget filter waktu
 class filterJangkaWaktu extends StatefulWidget {
@@ -401,25 +402,32 @@ class cutomTabBar extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           // tombol sebelah kiri
-          Padding(
-            padding: EdgeInsets.all(10),
-            child: Container(
-              alignment: AlignmentDirectional.center,
-              constraints: BoxConstraints(
-                maxWidth: screenWidth / 3,
-                minWidth: screenWidth / 3,
-                minHeight: 50,
-              ),
-              decoration: BoxDecoration(
-                color: Color.fromARGB(33, 255, 255, 255),
-                shape: BoxShape.rectangle,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Text(
-                'kelola stok',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
+          GestureDetector(
+            onTap:
+                () => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => InputProductsPage()),
+                ),
+            child: Padding(
+              padding: EdgeInsets.all(10),
+              child: Container(
+                alignment: AlignmentDirectional.center,
+                constraints: BoxConstraints(
+                  maxWidth: screenWidth / 3,
+                  minWidth: screenWidth / 3,
+                  minHeight: 50,
+                ),
+                decoration: BoxDecoration(
+                  color: Color.fromARGB(33, 255, 255, 255),
+                  shape: BoxShape.rectangle,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Text(
+                  'kelola stok',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ),

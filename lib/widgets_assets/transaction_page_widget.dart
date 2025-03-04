@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kasirapp2/main.dart';
+import 'package:kasirapp2/producs_input_page.dart';
 
 // card informasi transaks berisi pengeluaran, pemasukan dan total
 // class dipanggi di transaction_page
@@ -337,6 +338,190 @@ class _DetailTransaksiState extends State<DetailTransaksi> {
   }
 }
 
+// list barang
+//berisi nama, id, harga jumlah item
+
+class ListProducts extends StatefulWidget {
+  ListProducts({
+    super.key,
+    required this.items_controllers,
+    required this.data,
+    required this.onUpdateController,
+  });
+
+  //callback
+  List<TextEditingController> items_controllers;
+  List data;
+
+  final Function(TextEditingController, String) onUpdateController;
+
+  @override
+  State<ListProducts> createState() => _ListProductsState();
+}
+
+class _ListProductsState extends State<ListProducts> {
+  @override
+  Widget build(BuildContext context) {
+    return Flexible(
+      child: ListView.builder(
+        itemCount: widget.data.length,
+        itemBuilder: (context, index) {
+          // buat variabel baru untuk controller
+          TextEditingController item_controller =
+              widget.items_controllers[index];
+          return Container(
+            margin: EdgeInsets.all(1),
+            constraints: BoxConstraints(maxHeight: 65, minHeight: 50),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              shape: BoxShape.rectangle,
+              color: Color.fromARGB(255, 255, 255, 255),
+              border: Border.all(color: Color(0xFF6e8aff), width: 2),
+            ),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                // nama barang dan id
+                Expanded(
+                  flex: 20,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      // nama barang
+                      Container(
+                        padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
+                        child: Text(
+                          'nama barang $index',
+                          style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w500,
+                            overflow: TextOverflow.clip,
+                          ),
+                        ),
+                      ),
+
+                      // id transaksi
+                      Container(
+                        padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
+                        child: Text(
+                          'id barang $index',
+                          style: TextStyle(
+                            fontSize: 10,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                // harga barang
+                Expanded(
+                  flex: 20,
+                  child: Center(
+                    child: Text(
+                      'harga $index',
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                ),
+
+                // jumlah item
+                Expanded(
+                  flex: 20,
+                  child: Center(
+                    child: Row(
+                      children: [
+                        // tombol kurang
+                        Expanded(
+                          flex: 1,
+                          child: IconButton(
+                            onPressed: () {
+                              // ubah menjadi int
+                              if (int.tryParse(item_controller.text) == null) {
+                                item_controller.text = '0';
+                              }
+                              ;
+                              // kurangi angka
+                              int item_kurang =
+                                  int.parse(item_controller.text) - 1;
+                              // masukkan ke controller
+                              setState(() {
+                                item_controller.text = item_kurang.toString();
+                              });
+
+                              // callback fungsi untuk update data
+                              widget.onUpdateController(
+                                item_controller,
+                                item_kurang.toString(),
+                              );
+                            },
+                            icon: Icon(Icons.remove),
+                          ),
+                        ),
+
+                        // formfield untuk jumlah barang
+                        Expanded(
+                          flex: 2,
+                          child: TextField(
+                            controller: item_controller,
+                            textAlign: TextAlign.center,
+                            keyboardType:
+                                TextInputType.number, // Untuk input angka
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(),
+                            ),
+                            onChanged: (value) {
+                              setState(() {
+                                item_controller.text = value;
+                              });
+                            },
+                          ),
+                        ),
+
+                        // tombol tambah
+                        Expanded(
+                          flex: 1,
+                          child: IconButton(
+                            onPressed: () {
+                              // ubah menjadi int
+                              if (int.tryParse(item_controller.text) == null) {
+                                item_controller.text = '0';
+                              }
+                              ;
+                              // tambah angka
+                              int item_tambah =
+                                  int.parse(item_controller.text) + 1;
+                              // masukkan ke controller
+                              setState(() {
+                                item_controller.text = item_tambah.toString();
+                              });
+                              widget.onUpdateController(
+                                item_controller,
+                                item_tambah.toString(),
+                              );
+                            },
+                            icon: Icon(Icons.add),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+
 // custom tabbar
 
 class cutomTabBar extends StatelessWidget {
@@ -417,25 +602,32 @@ class cutomTabBar extends StatelessWidget {
           ),
 
           // tombol sebelah kanan'
-          Padding(
-            padding: EdgeInsets.all(10),
-            child: Container(
-              alignment: AlignmentDirectional.center,
-              constraints: BoxConstraints(
-                maxWidth: screenWidth / 3,
-                minWidth: screenWidth / 3,
-                minHeight: 50,
-              ),
-              decoration: BoxDecoration(
-                color: Color.fromARGB(33, 255, 255, 255),
-                shape: BoxShape.rectangle,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Text(
-                'Stok barang',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
+          GestureDetector(
+            onTap:
+                () => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => InputProductsPage()),
+                ),
+            child: Padding(
+              padding: EdgeInsets.all(10),
+              child: Container(
+                alignment: AlignmentDirectional.center,
+                constraints: BoxConstraints(
+                  maxWidth: screenWidth / 3,
+                  minWidth: screenWidth / 3,
+                  minHeight: 50,
+                ),
+                decoration: BoxDecoration(
+                  color: Color.fromARGB(33, 255, 255, 255),
+                  shape: BoxShape.rectangle,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Text(
+                  'Stok barang',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ),

@@ -42,6 +42,13 @@ class _TransactionPageState extends State<TransactionPage> {
     });
   }
 
+  // callback jumlah item barang
+  void onUpdateController(TextEditingController item, String value) {
+    setState(() {
+      item.text = value;
+    });
+  }
+
   // pembuatan controller ketika data dimuat
   @override
   void initState() {
@@ -52,6 +59,19 @@ class _TransactionPageState extends State<TransactionPage> {
       data.length,
       (index) => TextEditingController(text: index.toString()),
     );
+  }
+
+  // dispose resource untuk menghindari memory leak
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    // Hapus semua controller saat widget dihancurkan
+    for (var controller in items_controllers) {
+      controller.dispose();
+    }
+    catatan_transaksi.dispose();
+    cari_barang.dispose();
+    super.dispose();
   }
 
   @override
@@ -118,157 +138,10 @@ class _TransactionPageState extends State<TransactionPage> {
 
             // list barang
             // terdiri dari nama di bawahnya ada id, disampingnya ada harga jual di bagian kanan ada tombol tambah dan kurang
-            Flexible(
-              child: ListView.builder(
-                itemCount: data.length,
-                itemBuilder: (context, index) {
-                  // buat variabel baru untuk controller
-                  TextEditingController item_controller =
-                      items_controllers[index];
-                  return Container(
-                    margin: EdgeInsets.all(1),
-                    constraints: BoxConstraints(maxHeight: 65, minHeight: 50),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      shape: BoxShape.rectangle,
-                      color: Color.fromARGB(255, 255, 255, 255),
-                      border: Border.all(color: Color(0xFF6e8aff), width: 2),
-                    ),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        // nama barang dan id
-                        Expanded(
-                          flex: 20,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              // nama barang
-                              Container(
-                                padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
-                                child: Text(
-                                  'nama barang $index',
-                                  style: TextStyle(
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.w500,
-                                    overflow: TextOverflow.clip,
-                                  ),
-                                ),
-                              ),
-
-                              // id transaksi
-                              Container(
-                                padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
-                                child: Text(
-                                  'id barang $index',
-                                  style: TextStyle(
-                                    fontSize: 10,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-
-                        // harga barang
-                        Expanded(
-                          flex: 20,
-                          child: Center(
-                            child: Text(
-                              'harga $index',
-                              style: TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ),
-                        ),
-
-                        // jumlah item
-                        Expanded(
-                          flex: 20,
-                          child: Center(
-                            child: Row(
-                              children: [
-                                // tombol kurang
-                                Expanded(
-                                  flex: 1,
-                                  child: IconButton(
-                                    onPressed: () {
-                                      // ubah menjadi int
-                                      if (int.tryParse(item_controller.text) ==
-                                          null) {
-                                        item_controller.text = '0';
-                                      }
-                                      ;
-                                      // kurangi angka
-                                      int item_kurang =
-                                          int.parse(item_controller.text) - 1;
-                                      // masukkan ke controller
-                                      setState(() {
-                                        item_controller.text =
-                                            item_kurang.toString();
-                                      });
-                                    },
-                                    icon: Icon(Icons.remove),
-                                  ),
-                                ),
-
-                                // formfield untuk jumlah barang
-                                Expanded(
-                                  flex: 2,
-                                  child: TextField(
-                                    controller: item_controller,
-                                    textAlign: TextAlign.center,
-                                    keyboardType:
-                                        TextInputType
-                                            .number, // Untuk input angka
-                                    decoration: InputDecoration(
-                                      border: OutlineInputBorder(),
-                                    ),
-                                    onChanged: (value) {
-                                      setState(() {
-                                        item_controller.text = value;
-                                      });
-                                    },
-                                  ),
-                                ),
-
-                                // tombol tambah
-                                Expanded(
-                                  flex: 1,
-                                  child: IconButton(
-                                    onPressed: () {
-                                      // ubah menjadi int
-                                      if (int.tryParse(item_controller.text) ==
-                                          null) {
-                                        item_controller.text = '0';
-                                      }
-                                      ;
-                                      // tambah angka
-                                      int item_kurang =
-                                          int.parse(item_controller.text) + 1;
-                                      // masukkan ke controller
-                                      setState(() {
-                                        item_controller.text =
-                                            item_kurang.toString();
-                                      });
-                                    },
-                                    icon: Icon(Icons.add),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
-                },
-              ),
+            ListProducts(
+              items_controllers: items_controllers,
+              data: data,
+              onUpdateController: onUpdateController,
             ),
 
             // debug
