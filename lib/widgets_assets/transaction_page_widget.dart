@@ -340,7 +340,6 @@ class _DetailTransaksiState extends State<DetailTransaksi> {
 
 // list barang
 //berisi nama, id, harga jumlah item
-
 class ListProducts extends StatefulWidget {
   ListProducts({
     super.key,
@@ -523,7 +522,6 @@ class _ListProductsState extends State<ListProducts> {
 }
 
 // custom tabbar
-
 class cutomTabBar extends StatelessWidget {
   const cutomTabBar({super.key, required this.screenWidth});
 
