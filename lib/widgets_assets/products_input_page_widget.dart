@@ -254,214 +254,7 @@ class cutomTabBar extends StatelessWidget {
                   showDialog(
                     context: context,
                     builder: (context) {
-                      return AlertDialog(
-                        actionsAlignment: MainAxisAlignment.center,
-                        alignment: Alignment.center,
-                        icon: Icon(Icons.bar_chart_outlined),
-                        scrollable: true,
-                        actionsOverflowAlignment: OverflowBarAlignment.center,
-                        actionsOverflowButtonSpacing: 5,
-                        actionsOverflowDirection: VerticalDirection.down,
-                        //contentPadding: EdgeInsets.all(5),
-                        //elevation: 5,
-                        title: Text('Masukkan Informasi Barang'),
-
-                        // formfield
-                        content: Column(
-                          children: [
-                            // Expanded(flex: 1, child: Text('hello world')),
-                            // Expanded(flex: 1, child: Text('hello world')),
-                            // Expanded(flex: 1, child: Text('hello world')),
-                            // Expanded(flex: 1, child: Text('hello world')),
-                            // Expanded(flex: 1, child: Text('hello world')),
-                          ],
-                        ),
-                        actions: [
-                          ElevatedButton(
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
-                            child: Text('batalkan'),
-                          ),
-                          ElevatedButton(
-                            onPressed: () {},
-                            child: Text('simpan'),
-                          ),
-                        ],
-                      );
-                      // return Dialog(
-                      //   insetPadding: EdgeInsets.fromLTRB(50, 30, 50, 200),
-                      //   alignment: Alignment.center,
-                      //   backgroundColor: Colors.grey,
-                      //   elevation: 5,
-                      //   child: Container(
-                      //     alignment: Alignment.center,
-                      //     padding: EdgeInsets.all(5),
-                      //     decoration: BoxDecoration(
-                      //       color: const Color.fromARGB(255, 255, 255, 255),
-                      //       border: Border.all(
-                      //         color: Colors.black,
-                      //         style: BorderStyle.solid,
-                      //       ),
-                      //       borderRadius: BorderRadius.circular(10),
-                      //       shape: BoxShape.rectangle,
-                      //     ),
-                      //     // isi di dalam dialog
-                      //     child: Column(
-                      //       children: [
-                      //         Expanded(
-                      //           flex: 2,
-                      //           child: Container(
-                      //             constraints: BoxConstraints.expand(),
-                      //             margin: EdgeInsets.all(10),
-                      //             child: Text(
-                      //               textAlign: TextAlign.center,
-                      //               'Masukkan Informasi Barang',
-                      //               style: TextStyle(
-                      //                 color: Colors.black,
-                      //                 fontSize: 20,
-                      //                 fontWeight: FontWeight.bold,
-                      //               ),
-                      //             ),
-                      //             decoration: BoxDecoration(
-                      //               borderRadius: BorderRadius.circular(5),
-                      //               color: Colors.grey,
-                      //             ),
-                      //           ),
-                      //         ),
-
-                      //         Expanded(
-                      //           flex: 1,
-                      //           child: Container(
-                      //             constraints: BoxConstraints.tightForFinite(),
-                      //             decoration: BoxDecoration(
-                      //               borderRadius: BorderRadius.circular(5),
-                      //               color: Colors.blueGrey,
-                      //             ),
-
-                      //             margin: EdgeInsets.all(10),
-                      //             child: TextFormField(
-                      //               autovalidateMode: AutovalidateMode.always,
-                      //               decoration: InputDecoration(
-                      //                 border: OutlineInputBorder(),
-                      //                 labelText: 'kode barang',
-                      //               ),
-                      //               maxLength: 16,
-                      //               textAlign: TextAlign.center,
-                      //               style: TextStyle(
-                      //                 overflow: TextOverflow.clip,
-                      //               ),
-                      //             ),
-                      //           ),
-                      //         ),
-
-                      //         // nama barang
-                      //         Expanded(
-                      //           flex: 1,
-                      //           child: Container(
-                      //             constraints: BoxConstraints.tightForFinite(),
-                      //             decoration: BoxDecoration(
-                      //               borderRadius: BorderRadius.circular(5),
-                      //               color: Colors.blueGrey,
-                      //             ),
-
-                      //             margin: EdgeInsets.all(10),
-                      //             child: TextFormField(
-                      //               autovalidateMode: AutovalidateMode.always,
-                      //               decoration: InputDecoration(
-                      //                 border: OutlineInputBorder(),
-                      //                 labelText: 'kode barang',
-                      //               ),
-                      //               maxLength: 16,
-                      //               textAlign: TextAlign.center,
-                      //               style: TextStyle(
-                      //                 overflow: TextOverflow.clip,
-                      //               ),
-                      //             ),
-                      //           ),
-                      //         ),
-
-                      //         // modal
-                      //         Expanded(
-                      //           flex: 1,
-                      //           child: Container(
-                      //             constraints: BoxConstraints.tightForFinite(),
-                      //             decoration: BoxDecoration(
-                      //               borderRadius: BorderRadius.circular(5),
-                      //               color: Colors.blueGrey,
-                      //             ),
-
-                      //             margin: EdgeInsets.all(10),
-                      //             child: TextFormField(
-                      //               autovalidateMode: AutovalidateMode.always,
-                      //               decoration: InputDecoration(
-                      //                 border: OutlineInputBorder(),
-                      //                 labelText: 'kode barang',
-                      //               ),
-                      //               maxLength: 16,
-                      //               textAlign: TextAlign.center,
-                      //               style: TextStyle(
-                      //                 overflow: TextOverflow.clip,
-                      //               ),
-                      //             ),
-                      //           ),
-                      //         ),
-
-                      //         // harga
-                      //         Expanded(
-                      //           flex: 1,
-                      //           child: Container(
-                      //             constraints: BoxConstraints.tightForFinite(),
-                      //             decoration: BoxDecoration(
-                      //               borderRadius: BorderRadius.circular(5),
-                      //               color: Colors.blueGrey,
-                      //             ),
-
-                      //             margin: EdgeInsets.all(10),
-                      //             child: TextFormField(
-                      //               autovalidateMode: AutovalidateMode.always,
-                      //               decoration: InputDecoration(
-                      //                 border: OutlineInputBorder(),
-                      //                 labelText: 'kode barang',
-                      //               ),
-                      //               maxLength: 16,
-                      //               textAlign: TextAlign.center,
-                      //               style: TextStyle(
-                      //                 overflow: TextOverflow.clip,
-                      //               ),
-                      //             ),
-                      //           ),
-                      //         ),
-
-                      //         // stok
-                      //         Expanded(
-                      //           flex: 1,
-                      //           child: Container(
-                      //             constraints: BoxConstraints.tightForFinite(),
-                      //             decoration: BoxDecoration(
-                      //               borderRadius: BorderRadius.circular(5),
-                      //               color: Colors.blueGrey,
-                      //             ),
-
-                      //             margin: EdgeInsets.all(10),
-                      //             child: TextFormField(
-                      //               autovalidateMode: AutovalidateMode.always,
-                      //               decoration: InputDecoration(
-                      //                 border: OutlineInputBorder(),
-                      //                 labelText: 'kode barang',
-                      //               ),
-                      //               maxLength: 16,
-                      //               textAlign: TextAlign.center,
-                      //               style: TextStyle(
-                      //                 overflow: TextOverflow.clip,
-                      //               ),
-                      //             ),
-                      //           ),
-                      //         ),
-                      //       ],
-                      //     ),
-                      //   ),
-                      // );
+                      return TambahBarangDialog();
                     },
                   );
                 },
@@ -506,6 +299,172 @@ class cutomTabBar extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+// alert dialog
+// untuk tambah barang
+class TambahBarangDialog extends StatefulWidget {
+  const TambahBarangDialog({super.key});
+
+  @override
+  State<TambahBarangDialog> createState() => _TambahBarangDialogState();
+}
+
+class _TambahBarangDialogState extends State<TambahBarangDialog> {
+  TextEditingController kode_barang_controller = TextEditingController();
+  TextEditingController nama_barang_controller = TextEditingController();
+  TextEditingController modal_barang_controller = TextEditingController();
+  TextEditingController harga_barang_controller = TextEditingController();
+  TextEditingController stok_barang_controller = TextEditingController();
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      actionsAlignment: MainAxisAlignment.center,
+      alignment: Alignment.center,
+      icon: Icon(Icons.bar_chart_outlined),
+      scrollable: true,
+      actionsOverflowAlignment: OverflowBarAlignment.center,
+      actionsOverflowButtonSpacing: 5,
+      actionsOverflowDirection: VerticalDirection.down,
+      title: Text('Masukkan Informasi Barang'),
+
+      // formfield
+      content: Column(
+        children: [
+          // kode barang
+          Container(
+            margin: EdgeInsets.all(5),
+            child: TextFormField(
+              autovalidateMode: AutovalidateMode.always,
+              validator: (value) {
+                if (value!.isEmpty) {
+                  return 'data tidak boleh kosong';
+                }
+              },
+              controller: kode_barang_controller,
+              onChanged: (value) {
+                setState(() {
+                  kode_barang_controller.text = value;
+                });
+              },
+              canRequestFocus: true,
+              decoration: InputDecoration(
+                labelText: 'kode barang',
+                border: OutlineInputBorder(),
+              ),
+            ),
+          ),
+          // nama barang
+          Container(
+            margin: EdgeInsets.all(5),
+            child: TextFormField(
+              autovalidateMode: AutovalidateMode.always,
+              validator: (value) {
+                if (value!.isEmpty) {
+                  return 'data tidak boleh kosong';
+                }
+              },
+              controller: nama_barang_controller,
+              onChanged: (value) {
+                setState(() {
+                  nama_barang_controller.text = value;
+                });
+              },
+              canRequestFocus: true,
+              decoration: InputDecoration(
+                labelText: 'nama barang',
+                border: OutlineInputBorder(),
+              ),
+            ),
+          ),
+
+          // modal barang
+          Container(
+            margin: EdgeInsets.all(5),
+            child: TextFormField(
+              keyboardType: TextInputType.numberWithOptions(),
+              autovalidateMode: AutovalidateMode.always,
+              validator: (value) {
+                if (value!.isEmpty) {
+                  return 'data tidak boleh kosong';
+                }
+              },
+              controller: modal_barang_controller,
+              onChanged: (value) {
+                setState(() {
+                  modal_barang_controller.text = value;
+                });
+              },
+              canRequestFocus: true,
+              decoration: InputDecoration(
+                labelText: 'modal',
+                border: OutlineInputBorder(),
+              ),
+            ),
+          ),
+
+          // harga barang
+          Container(
+            margin: EdgeInsets.all(5),
+            child: TextFormField(
+              keyboardType: TextInputType.numberWithOptions(),
+              autovalidateMode: AutovalidateMode.always,
+              validator: (value) {
+                if (value!.isEmpty) {
+                  return 'data tidak boleh kosong';
+                }
+              },
+              controller: harga_barang_controller,
+              onChanged: (value) {
+                setState(() {
+                  harga_barang_controller.text = value;
+                });
+              },
+              canRequestFocus: true,
+              decoration: InputDecoration(
+                labelText: 'harga',
+                border: OutlineInputBorder(),
+              ),
+            ),
+          ),
+
+          // stok barang
+          Container(
+            margin: EdgeInsets.all(5),
+            child: TextFormField(
+              keyboardType: TextInputType.numberWithOptions(),
+              autovalidateMode: AutovalidateMode.always,
+              validator: (value) {
+                if (value!.isEmpty) {
+                  return 'data tidak boleh kosong';
+                }
+              },
+              controller: stok_barang_controller,
+              onChanged: (value) {
+                setState(() {
+                  stok_barang_controller.text = value;
+                });
+              },
+              canRequestFocus: true,
+              decoration: InputDecoration(
+                labelText: 'stok',
+                border: OutlineInputBorder(),
+              ),
+            ),
+          ),
+        ],
+      ),
+      actions: [
+        ElevatedButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          child: Text('batalkan'),
+        ),
+        ElevatedButton(onPressed: () {}, child: Text('simpan')),
+      ],
     );
   }
 }
