@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:kasirapp2/database_handler/database_model.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
@@ -87,5 +88,35 @@ class DatabaseInstance {
     ''');
 
     print('tabel transaksi produk berhasil dibuat');
+  }
+
+  // menampilkan semua transaksi
+  Future showAllTransactions() async {
+    final db = await database();
+    var data = await db.rawQuery('''SELECT * FROM $tabel_transaksi''');
+    // ubah bentuk data ke json
+    List<TransactionsModel> result =
+        data.map((e) => TransactionsModel.fromJson(e)).toList();
+    return result;
+  }
+
+  // menampilkan semua produk
+  Future showAllProducts() async {
+    final db = await database();
+    var data = await db.rawQuery('''SELECT * FROM $tabel_produk''');
+    // ubah bentuk data ke json
+    List<ProductsModel> result =
+        data.map((e) => ProductsModel.fromJson(e)).toList();
+    return result;
+  }
+
+  // menampilkan semua transaksi produk
+  Future showAllTransactionsProducts() async {
+    final db = await database();
+    var data = await db.rawQuery('''SELECT * FROM $tabel_produk_transaksi''');
+    // ubah bentuuk data ke json
+    List<ProductsTransactionsModel> result =
+        data.map((e) => ProductsTransactionsModel.fromJson(e)).toList();
+    return result;
   }
 }

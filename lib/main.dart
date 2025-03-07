@@ -35,6 +35,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  // list filter data
   List filter_data = [
     'semua',
     'hari ini',
@@ -64,12 +65,49 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     // inisiasi database
     databaseInstance.database();
+
+    // load database
+    loadDatabase();
     // TODO: implement initState
     super.initState();
   }
 
+  // data dari database
+  List<TransactionsModel> data_transaksi = []; // list data transaksi
+  List<ProductsModel> data_produk = []; // list data produk
+  List<ProductsTransactionsModel> data_produk_transaksi =
+      []; //list data produuk transaksi
+  bool load_status = true;
+
+  // fetchdatabase
+  Future fetchDatabase() async {
+    // ambil data transaksi
+    List<TransactionsModel> transaksi =
+        await databaseInstance.showAllTransactions();
+    data_transaksi = transaksi;
+    // ambil data produk
+    List<ProductsModel> produk = await databaseInstance.showAllProducts();
+    data_produk = produk;
+    // ambil data transaksi produk
+    List<ProductsTransactionsModel> produk_transaksi =
+        await databaseInstance.showAllTransactionsProducts();
+    data_produk_transaksi = produk_transaksi;
+
+    print('berhasil fetch database');
+    return true;
+  }
+
+  // load database
+  Future loadDatabase() async {
+    await Future.wait([fetchDatabase()]);
+    // debug
+    print('berhasil load database');
+    load_status = false;
+  }
+
   @override
   Widget build(BuildContext context) {
+    //load_status ? ;
     // lebar dan tinggi layar
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
@@ -81,13 +119,9 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
         centerTitle: true,
         // leading widget list
-        leading: IconButton(
-          icon: Icon(Icons.list),
-          onPressed: () {
-            ScaffoldMessenger.of(
-              context,
-            ).showSnackBar(SnackBar(content: Text("Tombol ditekan!")));
-          },
+        leading: AnimatedSwitcher(
+          duration: Duration.zero,
+          child: load_status ? CircularProgressIndicator() : Icon(Icons.check),
         ),
 
         //trailing widget upload
@@ -95,6 +129,7 @@ class _MyHomePageState extends State<MyHomePage> {
           IconButton(
             icon: Icon(Icons.upload),
             onPressed: () {
+              print(data_produk.length.toString());
               ScaffoldMessenger.of(
                 context,
               ).showSnackBar(SnackBar(content: Text("Upload ditekan!")));
