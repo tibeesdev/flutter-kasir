@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:kasirapp2/widgets_assets/main_page.dart';
+import 'package:kasirapp2/database_handler/database_instance.dart';
+import 'package:kasirapp2/database_handler/database_model.dart';
 
 void main() {
   runApp(const MyApp());
@@ -52,6 +54,15 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       filter_terpilih = nilai_baru;
     });
+  }
+
+  // inisiasi aplikasi
+  @override
+  void initState() {
+    // inisiasi database
+    DatabaseInstance.database();
+    // TODO: implement initState
+    super.initState();
   }
 
   @override

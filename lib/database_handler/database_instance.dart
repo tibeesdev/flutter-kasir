@@ -7,12 +7,12 @@ import 'package:path_provider/path_provider.dart';
 class DatabaseInstance {
   // informasi database
   final String nama_database = 'kasir.db';
-  final String versi_database = '1';
+  final versi_database = 1;
 
   // informasi tabel
-  final String tabel_produk = 'Produk';
-  final String tabel_transaksi = 'Transaksi';
-  final String tabel_produk_transaksi = 'ProdukTransaksi';
+  final tabel_produk = 'Produk';
+  final tabel_transaksi = 'Transaksi';
+  final tabel_produk_transaksi = 'ProdukTransaksi';
 
   // kolom produk
   final String produk_id = 'id';
@@ -51,5 +51,48 @@ class DatabaseInstance {
   // inisiasi
   Future _initDatabase() async {
     Directory documentDirectory = await getApplicationDocumentsDirectory();
+    String path = join(documentDirectory.path, nama_database);
+    return openDatabase(path, onCreate: onCreateDB, version: versi_database);
+  }
+
+  // buat database jika belum ada
+  Future onCreateDB(Database db, int version) async {
+
+    // buat tabel produk
+    await db.execute('''CREATE TABLE $tabel_produk (
+    $produk_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    $produk_kode TEXT NOT NULL UNIQUE,
+    $produk_nama TEXT NOT NULL,
+    $produk_modal INTEGER NOT NULL,
+    $produk_modal INTEGER NOT NULL,
+    $produk_stok INTEGER NOT NULL)''');
+
+    print('tabel produk berhasil dibuat');
+
+    // buat tabel transaksi
+    await db.execute('''CREATE TABLE $tabel_transaksi (
+    $transaksi_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    $transaksi_kode TEXT NOT NULL UNIQUE,
+    $transaksi_catatan TEXT NOT NULL,
+    $transaksi_total_modal INTEGER NOT NULL,
+    $transaksi_total_harga INTEGER NOT NULL,
+    $transaksi_total_keuntungan INTEGER NOT NULL)''');
+
+    print('tabel transaksi berhasil dibuat');
+
+    // buat tabel transaksi produk
+    await db.execute('''CREATE TABLE $tabel_produk_transaksi (
+    $transaksi_produk_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    $transaksi_produk_kode_transaksi TEXT NOT NULL,
+    $transaksi_produk_kode_barang TEXT NOT NULL,
+    $transaksi_produk_jumlah_item INTEGER NOT NULL,
+    ''');
+
+    print('tabel transaksi produk berhasil dibuat');
+
+
+
+
+
   }
 }
