@@ -56,11 +56,14 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  // inisiasi aplikasi
+  // inisiasi database
+  DatabaseInstance databaseInstance = DatabaseInstance();
+
+  //inisiasi aplikasi
   @override
   void initState() {
     // inisiasi database
-    DatabaseInstance.database();
+    databaseInstance.database();
     // TODO: implement initState
     super.initState();
   }

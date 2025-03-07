@@ -57,13 +57,11 @@ class DatabaseInstance {
 
   // buat database jika belum ada
   Future onCreateDB(Database db, int version) async {
-
     // buat tabel produk
     await db.execute('''CREATE TABLE $tabel_produk (
     $produk_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
     $produk_kode TEXT NOT NULL UNIQUE,
     $produk_nama TEXT NOT NULL,
-    $produk_modal INTEGER NOT NULL,
     $produk_modal INTEGER NOT NULL,
     $produk_stok INTEGER NOT NULL)''');
 
@@ -85,14 +83,9 @@ class DatabaseInstance {
     $transaksi_produk_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
     $transaksi_produk_kode_transaksi TEXT NOT NULL,
     $transaksi_produk_kode_barang TEXT NOT NULL,
-    $transaksi_produk_jumlah_item INTEGER NOT NULL,
+    $transaksi_produk_jumlah_item INTEGER NOT NULL)
     ''');
 
     print('tabel transaksi produk berhasil dibuat');
-
-
-
-
-
   }
 }
