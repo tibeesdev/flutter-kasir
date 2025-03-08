@@ -1,4 +1,7 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
+import 'package:kasirapp2/database_handler/database_model.dart';
 import 'package:kasirapp2/transaction_page.dart';
 import 'package:kasirapp2/producs_input_page.dart';
 
@@ -286,91 +289,110 @@ class headerDataTransaksi extends StatelessWidget {
 }
 
 // informasi transaksi lengkap (buat sistem onclicknya)
-class informasiTransaksi extends StatelessWidget {
-  const informasiTransaksi({super.key});
+class informasiTransaksi extends StatefulWidget {
+  informasiTransaksi({super.key, required this.data_transaksi});
+  // list berisi data transaksi
+  List<TransactionsModel> data_transaksi = [];
 
   @override
-  Widget build(BuildContext context) {
-    return Flexible(
-      child: ListView.builder(
-        itemCount: 10,
-        itemBuilder: (context, index) {
-          return Container(
-            margin: EdgeInsets.all(5),
-            constraints: BoxConstraints(maxHeight: 65, minHeight: 50),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              shape: BoxShape.rectangle,
-              color: Color.fromARGB(255, 255, 255, 255),
-              border: Border.all(color: Color(0xFF6e8aff), width: 2),
-            ),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Expanded(
-                  flex: 40,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
+  State<informasiTransaksi> createState() => _informasiTransaksiState();
+}
 
+class _informasiTransaksiState extends State<informasiTransaksi> {
+  @override
+  Widget build(BuildContext context) {
+    return widget.data_transaksi.length == 0
+        ? Container(child: Text('belum ada transkasi yang dibuat'))
+        : Flexible(
+          child: ListView.builder(
+            itemCount: widget.data_transaksi.length,
+            itemBuilder: (context, index) {
+              // untuk fungsi on click pakai gesture detetctor
+
+              return GestureDetector(
+                // ketika disentuh maka akan memanggil data yang sesuai
+                onTap: () {
+                  final String? kode_transaksi_tap =
+                      widget.data_transaksi[index].kode_transaksi;
+                  print(kode_transaksi_tap);
+                },
+                child: Container(
+                  margin: EdgeInsets.all(5),
+                  constraints: BoxConstraints(maxHeight: 65, minHeight: 50),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    shape: BoxShape.rectangle,
+                    color: Color.fromARGB(255, 255, 255, 255),
+                    border: Border.all(color: Color(0xFF6e8aff), width: 2),
+                  ),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      Container(
-                        padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
-                        child: Text(
-                          'Catatan $index',
-                          style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w500,
-                            overflow: TextOverflow.clip,
+                      Expanded(
+                        flex: 40,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+
+                          children: [
+                            Container(
+                              padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
+                              child: Text(
+                                'Catatan $index',
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w500,
+                                  overflow: TextOverflow.clip,
+                                ),
+                              ),
+                            ),
+
+                            // id transaksi
+                            Container(
+                              padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
+                              child: Text(
+                                'id transaksi $index',
+                                style: TextStyle(
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Expanded(
+                        flex: 25,
+                        child: Center(
+                          child: Text(
+                            'pengeluaran $index',
+                            style: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
                         ),
                       ),
-
-                      // id transaksi
-                      Container(
-                        padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
-                        child: Text(
-                          'id transaksi $index',
-                          style: TextStyle(
-                            fontSize: 10,
-                            fontWeight: FontWeight.bold,
+                      Expanded(
+                        flex: 25,
+                        child: Center(
+                          child: Text(
+                            'pemasukan $index',
+                            style: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
                         ),
                       ),
                     ],
                   ),
                 ),
-                Expanded(
-                  flex: 25,
-                  child: Center(
-                    child: Text(
-                      'pengeluaran $index',
-                      style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-                ),
-                Expanded(
-                  flex: 25,
-                  child: Center(
-                    child: Text(
-                      'pemasukan $index',
-                      style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          );
-        },
-      ),
-    );
+              );
+            },
+          ),
+        );
   }
 }
 

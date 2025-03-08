@@ -80,6 +80,15 @@ class _MyHomePageState extends State<MyHomePage> {
   bool load_status = true;
 
   // fetchdatabase
+  Future fetchTransactions() async {
+    // ambil data transaksi
+    List<TransactionsModel> transaksi =
+        await databaseInstance.showAllTransactions();
+    setState(() {
+      data_transaksi = transaksi;
+    });
+  }
+
   Future fetchDatabase() async {
     // ambil data transaksi
     List<TransactionsModel> transaksi =
@@ -102,7 +111,9 @@ class _MyHomePageState extends State<MyHomePage> {
     await Future.wait([fetchDatabase()]);
     // debug
     print('berhasil load database');
-    load_status = false;
+    setState(() {
+      load_status = false;
+    });
   }
 
   @override
@@ -121,18 +132,29 @@ class _MyHomePageState extends State<MyHomePage> {
         // leading widget list
         leading: AnimatedSwitcher(
           duration: Duration.zero,
-          child: load_status ? CircularProgressIndicator() : Icon(Icons.check),
+          child:
+              load_status
+                  ? Icon(Icons.radio_button_unchecked)
+                  : Icon(Icons.check),
         ),
 
         //trailing widget upload
         actions: [
           IconButton(
             icon: Icon(Icons.upload),
-            onPressed: () {
-              print(data_produk.length.toString());
-              ScaffoldMessenger.of(
-                context,
-              ).showSnackBar(SnackBar(content: Text("Upload ditekan!")));
+            onPressed: () async {
+              int kode = await databaseInstance.insertTransactions({
+                'total_modal': 25000,
+                'total_harga': 50000,
+                'total_keuntungan': 25000,
+                'catatan_transaksi': 'test transaksi',
+                'kode_transaksi': 'kode 7',
+              });
+              print(kode.toString());
+              setState(() {
+                fetchTransactions();
+              });
+              print(data_transaksi.length);
             },
           ),
         ],
@@ -161,13 +183,13 @@ class _MyHomePageState extends State<MyHomePage> {
             headerDataTransaksi(screenWidth: screenWidth),
 
             // informasi transaksi berisi catatan, id transaksi, pengeluaran dan pemasukan
-            informasiTransaksi(),
-            // tabbar custom
-            // container awal
-            cutomTabBar(screenWidth: screenWidth),
+            informasiTransaksi(data_transaksi: data_transaksi),
           ],
         ),
       ),
+      bottomNavigationBar: // tabbar custom
+      // container awal
+      cutomTabBar(screenWidth: screenWidth),
     );
   }
 }

@@ -119,4 +119,27 @@ class DatabaseInstance {
         data.map((e) => ProductsTransactionsModel.fromJson(e)).toList();
     return result;
   }
+
+  // input data
+  // barang
+  Future<int> insertProducts(Map<String, dynamic> row) async {
+    final query = await database().then((db) => db.insert(tabel_produk, row));
+    return query;
+  }
+
+  // transaksi
+  Future<int> insertTransactions(Map<String, dynamic> row) async {
+    final query = await database().then(
+      (db) => db.insert(tabel_transaksi, row),
+    );
+    return query;
+  }
+
+  // produk transaksi
+  Future<int> insertProductsTransactions(Map<String, dynamic> row) async {
+    final query = await database().then(
+      (db) => db.insert(tabel_produk_transaksi, row),
+    );
+    return query;
+  }
 }
