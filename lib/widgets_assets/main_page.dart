@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:kasirapp2/database_handler/database_instance.dart';
 import 'package:kasirapp2/database_handler/database_model.dart';
 import 'package:kasirapp2/transaction_page.dart';
 import 'package:kasirapp2/producs_input_page.dart';
@@ -299,6 +300,8 @@ class informasiTransaksi extends StatefulWidget {
 }
 
 class _informasiTransaksiState extends State<informasiTransaksi> {
+  // inisiasi database
+  DatabaseInstance databaseInstance = DatabaseInstance();
   @override
   Widget build(BuildContext context) {
     return widget.data_transaksi.length == 0
@@ -307,14 +310,21 @@ class _informasiTransaksiState extends State<informasiTransaksi> {
           child: ListView.builder(
             itemCount: widget.data_transaksi.length,
             itemBuilder: (context, index) {
+              // masukkan data transaksi ke dalam varabel agar mudah diakses
+              TransactionsModel data_transaksi = widget.data_transaksi[index];
               // untuk fungsi on click pakai gesture detetctor
 
               return GestureDetector(
                 // ketika disentuh maka akan memanggil data yang sesuai
-                onTap: () {
+                onTap: () async {
                   final String? kode_transaksi_tap =
                       widget.data_transaksi[index].kode_transaksi;
                   print(kode_transaksi_tap);
+                  TransactionsModel data = await databaseInstance
+                      .showTransactionsByKode(kode_transaksi_tap!);
+                  print(data.catatan_transaksi);
+
+                  // page informasi transaksi
                 },
                 child: Container(
                   margin: EdgeInsets.all(5),
@@ -339,7 +349,7 @@ class _informasiTransaksiState extends State<informasiTransaksi> {
                             Container(
                               padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
                               child: Text(
-                                'Catatan $index',
+                                data_transaksi.catatan_transaksi.toString(),
                                 style: TextStyle(
                                   fontSize: 15,
                                   fontWeight: FontWeight.w500,
@@ -352,7 +362,7 @@ class _informasiTransaksiState extends State<informasiTransaksi> {
                             Container(
                               padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
                               child: Text(
-                                'id transaksi $index',
+                                data_transaksi.kode_transaksi.toString(),
                                 style: TextStyle(
                                   fontSize: 10,
                                   fontWeight: FontWeight.bold,
@@ -366,7 +376,7 @@ class _informasiTransaksiState extends State<informasiTransaksi> {
                         flex: 25,
                         child: Center(
                           child: Text(
-                            'pengeluaran $index',
+                            data_transaksi.total_modal.toString(),
                             style: TextStyle(
                               fontSize: 15,
                               fontWeight: FontWeight.w500,
@@ -378,7 +388,7 @@ class _informasiTransaksiState extends State<informasiTransaksi> {
                         flex: 25,
                         child: Center(
                           child: Text(
-                            'pemasukan $index',
+                            data_transaksi.total_harga.toString(),
                             style: TextStyle(
                               fontSize: 15,
                               fontWeight: FontWeight.w500,

@@ -142,4 +142,18 @@ class DatabaseInstance {
     );
     return query;
   }
+
+  // fetch data berdasarkan kode
+  //kode trnasksi
+  Future showTransactionsByKode(String kode_transaksi) async {
+    final db = await database();
+    final query = await db.query(
+      tabel_transaksi,
+      where: '$transaksi_kode = ?',
+      whereArgs: [kode_transaksi],
+    );
+    var res =
+        query.toList().map((e) => TransactionsModel.fromJson(e)).toList()[0];
+    return res;
+  }
 }
