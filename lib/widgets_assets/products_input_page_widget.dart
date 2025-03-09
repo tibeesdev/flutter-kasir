@@ -3,6 +3,7 @@ import 'package:kasirapp2/database_handler/database_instance.dart';
 import 'package:kasirapp2/database_handler/database_model.dart';
 import 'package:kasirapp2/main.dart';
 import 'package:kasirapp2/transaction_page.dart';
+import 'package:kasirapp2/transaction_provider.dart';
 
 // header untuk data produk berisi teks catatan, pengeluaran dan pemasukan
 class headerDataProduk extends StatelessWidget {
@@ -201,7 +202,10 @@ class cutomTabBar extends StatefulWidget {
     super.key,
     required this.screenWidth,
     required this.onInsertProduct,
+    required this.dataBaseNotifier
   });
+
+  DataBaseNotifier dataBaseNotifier;
 
   final double screenWidth;
   Future Function() onInsertProduct;
@@ -261,7 +265,7 @@ class _cutomTabBarState extends State<cutomTabBar> {
             ),
           ),
 
-          // tombol tambah di bagian tengah untuk simpan transaksi
+          // tombol tambah di bagian tengah untuk tambah produk
           Transform.translate(
             offset: Offset(0, -20),
             transformHitTests: true,
@@ -279,9 +283,7 @@ class _cutomTabBarState extends State<cutomTabBar> {
                   showDialog(
                     context: context,
                     builder: (context) {
-                      return TambahBarangDialog(
-                        onInsertProducts: widget.onInsertProduct,
-                      );
+                      return TambahBarangDialog(dataBaseNotifier: widget.dataBaseNotifier);
                     },
                   );
                 },
@@ -298,7 +300,7 @@ class _cutomTabBarState extends State<cutomTabBar> {
             onTap:
                 () => Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => TransactionPage()),
+                  MaterialPageRoute(builder: (context) => TransactionPage(dataBaseNotifier:widget.dataBaseNotifier,)),
                 ),
             child: Padding(
               padding: EdgeInsets.all(10),
@@ -333,9 +335,8 @@ class _cutomTabBarState extends State<cutomTabBar> {
 // alert dialog
 // untuk tambah barang
 class TambahBarangDialog extends StatefulWidget {
-  TambahBarangDialog({super.key, required this.onInsertProducts});
-
-  Future Function() onInsertProducts;
+  TambahBarangDialog({super.key, required this.dataBaseNotifier});
+  DataBaseNotifier dataBaseNotifier;
 
   @override
   State<TambahBarangDialog> createState() => _TambahBarangDialogState();
@@ -510,7 +511,7 @@ class _TambahBarangDialogState extends State<TambahBarangDialog> {
               'kode_barang': kode_barang_controller.text,
             });
             // fetch ulang data
-            await widget.onInsertProducts;
+            await widget.dataBaseNotifier.fetchProducts();
             print('data berhasil diinput');
 
             //tutup jendela

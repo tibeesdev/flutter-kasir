@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kasirapp2/main.dart';
 import 'package:kasirapp2/producs_input_page.dart';
+import 'package:kasirapp2/transaction_provider.dart';
 
 // card informasi transaks berisi pengeluaran, pemasukan dan total
 // class dipanggi di transaction_page
@@ -523,7 +524,9 @@ class _ListProductsState extends State<ListProducts> {
 
 // custom tabbar
 class cutomTabBar extends StatelessWidget {
-  const cutomTabBar({super.key, required this.screenWidth});
+  cutomTabBar({super.key, required this.screenWidth, required this.dataBaseNotifier});
+
+  DataBaseNotifier dataBaseNotifier;
 
   final double screenWidth;
 
@@ -604,7 +607,11 @@ class cutomTabBar extends StatelessWidget {
             onTap:
                 () => Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => InputProductsPage()),
+                  MaterialPageRoute(
+                    builder:
+                        (context) =>
+                            InputProductsPage(dataBaseNotifier: dataBaseNotifier),
+                  ),
                 ),
             child: Padding(
               padding: EdgeInsets.all(10),

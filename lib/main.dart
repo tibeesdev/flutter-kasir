@@ -179,7 +179,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       bottomNavigationBar: // tabbar custom
       // container awal
-      cutomTabBar(screenWidth: screenWidth),
+      cutomTabBar(screenWidth: screenWidth, dataBaseNotifier: dataBaseNotifier,),
     );
   }
 }

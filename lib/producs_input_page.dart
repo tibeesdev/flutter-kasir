@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:kasirapp2/transaction_provider.dart';
 import 'widgets_assets/products_input_page_widget.dart';
 import 'database_handler/database_instance.dart';
 import 'database_handler/database_model.dart';
 
 class InputProductsPage extends StatefulWidget {
-  const InputProductsPage({super.key});
+  InputProductsPage({super.key, required this.dataBaseNotifier});
+
+  DataBaseNotifier dataBaseNotifier;
 
   @override
   State<InputProductsPage> createState() => _InputProductsPageState();
@@ -18,21 +21,21 @@ class _InputProductsPageState extends State<InputProductsPage> {
   bool isLoading = true;
 
   //fetch produk
-  List<ProductsModel> data_produk = [];
-  Future fetchProducts() async {
-    // ambil data produk
-    List<ProductsModel> produk = await databaseInstance.showAllProducts();
-    setState(() {
-      data_produk = produk;
-      print('object');
-    });
+  // List<ProductsModel> data_produk = [];
+  // Future fetchProducts() async {
+  //   // ambil data produk
+  //   List<ProductsModel> produk = await databaseInstance.showAllProducts();
+  //   setState(() {
+  //     data_produk = produk;
+  //     print('object');
+  //   });
 
-    print('berhasil fetch produk');
-  }
+  //   print('berhasil fetch produk');
+  // }
 
   // load produk
   Future loadDatabase() async {
-    await Future.wait([fetchProducts()]);
+    await Future.wait([widget.dataBaseNotifier.fetchProducts()]);
     print('berhasil load database produk');
     setState(() {
       isLoading = false;
@@ -84,13 +87,22 @@ class _InputProductsPageState extends State<InputProductsPage> {
           headerDataProduk(screenWidth: screenWidth),
 
           // list barang
-          ListBarang(data_produk: data_produk, onInsertProducts: loadDatabase),
+          ListenableBuilder(
+            listenable: widget.dataBaseNotifier,
+            builder: (context, child) {
+              return ListBarang(
+                data_produk: widget.dataBaseNotifier.data_produk,
+                onInsertProducts: loadDatabase,
+              );
+            },
+          ),
         ],
       ),
       // custom tabbar
       bottomNavigationBar: cutomTabBar(
         screenWidth: screenWidth,
         onInsertProduct: loadDatabase,
+        dataBaseNotifier: widget.dataBaseNotifier,
       ),
     );
   }

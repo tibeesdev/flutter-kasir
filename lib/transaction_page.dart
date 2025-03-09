@@ -1,10 +1,13 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:kasirapp2/transaction_provider.dart';
 import 'widgets_assets/transaction_page_widget.dart';
 
 class TransactionPage extends StatefulWidget {
-  const TransactionPage({super.key});
+  TransactionPage({super.key, required this.dataBaseNotifier});
+
+  DataBaseNotifier dataBaseNotifier;
 
   @override
   State<TransactionPage> createState() => _TransactionPageState();
@@ -148,7 +151,7 @@ class _TransactionPageState extends State<TransactionPage> {
             // Text(items_controllers[0].text.toString()),
             // Text(cari_barang.text.toString()),
             // Text(_selectedDate.toString()),
-            cutomTabBar(screenWidth: screenWidth),
+            cutomTabBar(screenWidth: screenWidth, dataBaseNotifier: widget.dataBaseNotifier),
           ],
         ),
       ),
