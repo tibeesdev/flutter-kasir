@@ -202,7 +202,7 @@ class cutomTabBar extends StatefulWidget {
     super.key,
     required this.screenWidth,
     required this.onInsertProduct,
-    required this.dataBaseNotifier
+    required this.dataBaseNotifier,
   });
 
   DataBaseNotifier dataBaseNotifier;
@@ -283,7 +283,9 @@ class _cutomTabBarState extends State<cutomTabBar> {
                   showDialog(
                     context: context,
                     builder: (context) {
-                      return TambahBarangDialog(dataBaseNotifier: widget.dataBaseNotifier);
+                      return TambahBarangDialog(
+                        dataBaseNotifier: widget.dataBaseNotifier,
+                      );
                     },
                   );
                 },
@@ -300,7 +302,12 @@ class _cutomTabBarState extends State<cutomTabBar> {
             onTap:
                 () => Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => TransactionPage(dataBaseNotifier:widget.dataBaseNotifier,)),
+                  MaterialPageRoute(
+                    builder:
+                        (context) => TransactionPage(
+                          dataBaseNotifier: widget.dataBaseNotifier,
+                        ),
+                  ),
                 ),
             child: Padding(
               padding: EdgeInsets.all(10),
@@ -350,6 +357,9 @@ class _TambahBarangDialogState extends State<TambahBarangDialog> {
   TextEditingController stok_barang_controller = TextEditingController();
   @override
   Widget build(BuildContext context) {
+    // buat variabel agar lebih mudak diakses
+    List<ProductsModel> data_produk = widget.dataBaseNotifier.data_produk;
+
     return AlertDialog(
       actionsAlignment: MainAxisAlignment.center,
       alignment: Alignment.center,
@@ -369,8 +379,15 @@ class _TambahBarangDialogState extends State<TambahBarangDialog> {
             child: TextFormField(
               autovalidateMode: AutovalidateMode.always,
               validator: (value) {
+                // cek jika kode sudah digunakan
+                bool exists = data_produk.any(
+                  (list) => list.kode_barang == value,
+                );
                 if (value!.isEmpty) {
                   return 'data tidak boleh kosong';
+                } // cek jika key sudah ada di dalam database
+                else if (exists) {
+                  return 'kode barang sudah dipakai';
                 }
               },
               controller: kode_barang_controller,
@@ -503,6 +520,7 @@ class _TambahBarangDialogState extends State<TambahBarangDialog> {
           onPressed: () async {
             // inisiasi database
             DatabaseInstance databaseInstance = DatabaseInstance();
+            // masukkan data baru ke dalam database
             await databaseInstance.insertProducts({
               'harga_barang': int.tryParse(harga_barang_controller.text),
               'modal_barang': int.tryParse(modal_barang_controller.text),
@@ -512,8 +530,6 @@ class _TambahBarangDialogState extends State<TambahBarangDialog> {
             });
             // fetch ulang data
             await widget.dataBaseNotifier.fetchProducts();
-            print('data berhasil diinput');
-
             //tutup jendela
             Navigator.pop(context);
           },
