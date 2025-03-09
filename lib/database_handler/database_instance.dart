@@ -199,4 +199,12 @@ class DatabaseInstance {
     );
     return query;
   }
+
+  // hapus data
+  // hapus produk berdasarkana kode
+  Future<int> deleteProduct(String kode_barang)async{
+    final db = await database();
+    final query = await db.delete(tabel_produk, where: '$produk_kode = ?', whereArgs: [kode_barang]);
+    return query;
+  }
 }

@@ -78,11 +78,11 @@ class ListBarang extends StatefulWidget {
   ListBarang({
     super.key,
     required this.data_produk,
-    required this.onInsertProducts,
+    required this.dataBaseNotifier,
   });
 
   List data_produk;
-  Future Function() onInsertProducts;
+  DataBaseNotifier dataBaseNotifier;
 
   @override
   State<ListBarang> createState() => _ListBarangState();
@@ -91,103 +91,144 @@ class ListBarang extends StatefulWidget {
 class _ListBarangState extends State<ListBarang> {
   @override
   Widget build(BuildContext context) {
-    return widget.data_produk.length == 0
+    List<ProductsModel> data_produk = widget.dataBaseNotifier.data_produk;
+    return data_produk.length == 0
         ? Text('tidak ada data barang')
         : Flexible(
           child: ListView.builder(
-            itemCount: widget.data_produk.length,
+            itemCount: data_produk.length,
             itemBuilder: (context, index) {
-              ProductsModel produk = widget.data_produk[index];
-              return Container(
-                margin: EdgeInsets.all(1),
-                constraints: BoxConstraints(maxHeight: 70, minHeight: 50),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  shape: BoxShape.rectangle,
-                  color: Color.fromARGB(255, 255, 255, 255),
-                  border: Border.all(color: Color(0xFF6e8aff), width: 2),
-                ),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    // nama barang dan id
-                    Expanded(
-                      flex: 30,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          // nama barang
-                          Container(
-                            padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
-                            child: Text(
-                              produk.nama_barang.toString(),
-                              style: TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.w500,
-                                overflow: TextOverflow.clip,
-                              ),
-                            ),
+              ProductsModel produk = data_produk[index];
+              // gesture detector untuk menambah opsi edit update dan delete
+
+              return GestureDetector(
+                onLongPress: () {
+                  // kode produk
+                  String kode_produk = produk.kode_barang!;
+                  //tampilkan alert dialog
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      // alertdialog konfirmasi hapus barang
+                      return AlertDialog(
+                        content: Text('hapus produk : $kode_produk?'),
+                        actions: [
+                          // batalkan
+                          ElevatedButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: Text('batalkan'),
                           ),
 
-                          // id transaksi
-                          Container(
-                            padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
-                            child: Text(
-                              produk.kode_barang.toString(),
-                              style: TextStyle(
-                                fontSize: 10,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
+                          // konfirmasi hapus
+                          ElevatedButton(
+                            onPressed: () {
+                              // hapus produk
+                              widget.dataBaseNotifier.deleteProduk(kode_produk);
+                              // fetch ulang data
+                              widget.dataBaseNotifier.fetchProducts();
+                              // tutup jendela
+                              Navigator.pop(context);
+                            },
+                            child: Text('hapus'),
                           ),
                         ],
-                      ),
-                    ),
+                      );
+                    },
+                  );
+                },
+                child: Container(
+                  margin: EdgeInsets.all(1),
+                  constraints: BoxConstraints(maxHeight: 70, minHeight: 50),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    shape: BoxShape.rectangle,
+                    color: Color.fromARGB(255, 255, 255, 255),
+                    border: Border.all(color: Color(0xFF6e8aff), width: 2),
+                  ),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      // nama barang dan id
+                      Expanded(
+                        flex: 30,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            // nama barang
+                            Container(
+                              padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
+                              child: Text(
+                                produk.nama_barang.toString(),
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w500,
+                                  overflow: TextOverflow.clip,
+                                ),
+                              ),
+                            ),
 
-                    // stok barang
-                    Expanded(
-                      flex: 20,
-                      child: Center(
-                        child: Text(
-                          produk.stok_barang.toString(),
-                          style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w500,
+                            // id transaksi
+                            Container(
+                              padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
+                              child: Text(
+                                produk.kode_barang.toString(),
+                                style: TextStyle(
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      // stok barang
+                      Expanded(
+                        flex: 20,
+                        child: Center(
+                          child: Text(
+                            produk.stok_barang.toString(),
+                            style: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
                         ),
                       ),
-                    ),
 
-                    // modal
-                    Expanded(
-                      flex: 25,
-                      child: Center(
-                        child: Text(
-                          produk.modal_barang.toString(),
-                          style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w500,
+                      // modal
+                      Expanded(
+                        flex: 25,
+                        child: Center(
+                          child: Text(
+                            produk.modal_barang.toString(),
+                            style: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
                         ),
                       ),
-                    ),
 
-                    // harga
-                    Expanded(
-                      flex: 25,
-                      child: Center(
-                        child: Text(
-                          produk.harga_barang.toString(),
-                          style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w500,
+                      // harga
+                      Expanded(
+                        flex: 25,
+                        child: Center(
+                          child: Text(
+                            produk.harga_barang.toString(),
+                            style: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               );
             },

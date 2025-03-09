@@ -20,18 +20,7 @@ class _InputProductsPageState extends State<InputProductsPage> {
   // status loading database
   bool isLoading = true;
 
-  //fetch produk
-  // List<ProductsModel> data_produk = [];
-  // Future fetchProducts() async {
-  //   // ambil data produk
-  //   List<ProductsModel> produk = await databaseInstance.showAllProducts();
-  //   setState(() {
-  //     data_produk = produk;
-  //     print('object');
-  //   });
 
-  //   print('berhasil fetch produk');
-  // }
 
   // load produk
   Future loadDatabase() async {
@@ -92,7 +81,7 @@ class _InputProductsPageState extends State<InputProductsPage> {
             builder: (context, child) {
               return ListBarang(
                 data_produk: widget.dataBaseNotifier.data_produk,
-                onInsertProducts: loadDatabase,
+                dataBaseNotifier: widget.dataBaseNotifier,
               );
             },
           ),
