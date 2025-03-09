@@ -5,75 +5,72 @@ import 'package:kasirapp2/database_handler/database_instance.dart';
 import 'package:kasirapp2/database_handler/database_model.dart';
 import 'package:kasirapp2/transaction_page.dart';
 import 'package:kasirapp2/producs_input_page.dart';
+import 'package:kasirapp2/transaction_provider.dart';
 
 // widget filter waktu
 class filterJangkaWaktu extends StatefulWidget {
-  filterJangkaWaktu({
-    super.key,
-    required this.filter_data,
-    required this.filter_terpilih,
-    required this.onUpdateFilter,
-  });
-  final List filter_data;
-  int filter_terpilih;
-
-  // fungsi untuk update filter di parent class
-  final Function(int) onUpdateFilter;
+  filterJangkaWaktu({super.key, required this.timeFilter});
+  TimeFilter timeFilter;
 
   @override
   State<filterJangkaWaktu> createState() => _filterJangkaWaktuState();
 }
 
 class _filterJangkaWaktuState extends State<filterJangkaWaktu> {
+  //TimeFilter timeFilter = TimeFilter();
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
-    return Container(
-      alignment: Alignment.center,
-      padding: EdgeInsets.all(1),
-      constraints: BoxConstraints(
-        minHeight: 50,
-        maxHeight: 50,
-        maxWidth: screenWidth,
-      ),
-      color: Colors.white,
-      child: Container(
-        child: ListView.builder(
-          itemCount: widget.filter_data.length,
-          scrollDirection: Axis.horizontal,
-          itemBuilder: (context, index) {
-            bool terpilih = widget.filter_terpilih == index;
-            return GestureDetector(
-              onTap: () {
-                widget.onUpdateFilter(index);
-                setState(() {
-                  widget.filter_terpilih = index;
-                });
-              },
-              child: Container(
-                alignment: Alignment.center,
-                constraints: BoxConstraints(minWidth: 50),
-                margin: EdgeInsets.all(5),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: terpilih ? Color(0xFF6e8aff) : Color(0xFFbfcfff),
-                  shape: BoxShape.rectangle,
-                ),
-                child: Container(
-                  padding: EdgeInsets.all(10),
-                  child: Text(
-                    widget.filter_data[index],
-                    style:
-                        terpilih
-                            ? TextStyle(color: Colors.white)
-                            : TextStyle(color: Colors.black),
+    return ListenableBuilder(
+      listenable: widget.timeFilter,
+      builder: (context, child) {
+        return Container(
+          alignment: Alignment.center,
+          padding: EdgeInsets.all(1),
+          constraints: BoxConstraints(
+            minHeight: 50,
+            maxHeight: 50,
+            maxWidth: screenWidth,
+          ),
+          color: Colors.white,
+          child: Container(
+            child: ListView.builder(
+              itemCount: widget.timeFilter.filter_data.length,
+              scrollDirection: Axis.horizontal,
+              itemBuilder: (context, index) {
+                bool terpilih = widget.timeFilter.filter_terpilih == index;
+                return GestureDetector(
+                  onTap: () {
+                    widget.timeFilter.updateFilter(index);
+                    //setState(() {});
+                  },
+                  child: Container(
+                    alignment: Alignment.center,
+                    constraints: BoxConstraints(minWidth: 50),
+                    margin: EdgeInsets.all(5),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: terpilih ? Color(0xFF6e8aff) : Color(0xFFbfcfff),
+                      shape: BoxShape.rectangle,
+                    ),
+                    child: Container(
+                      padding: EdgeInsets.all(10),
+                      child: Text(
+                        widget.timeFilter
+                            .filter_data[index], //widget.filter_data[index],
+                        style:
+                            terpilih
+                                ? TextStyle(color: Colors.white)
+                                : TextStyle(color: Colors.black),
+                      ),
+                    ),
                   ),
-                ),
-              ),
-            );
-          },
-        ),
-      ),
+                );
+              },
+            ),
+          ),
+        );
+      },
     );
   }
 }
@@ -407,18 +404,28 @@ class _informasiTransaksiState extends State<informasiTransaksi> {
 }
 
 // tabbar custom
-class cutomTabBar extends StatelessWidget {
-  const cutomTabBar({super.key, required this.screenWidth});
+class cutomTabBar extends StatefulWidget {
+  cutomTabBar({
+    super.key,
+    required this.screenWidth,
+    required this.data_produk,
+  });
 
   final double screenWidth;
+  List<ProductsModel> data_produk; // data untuk dipass ke dalam page product
 
+  @override
+  State<cutomTabBar> createState() => _cutomTabBarState();
+}
+
+class _cutomTabBarState extends State<cutomTabBar> {
   @override
   Widget build(BuildContext context) {
     return Container(
       constraints: BoxConstraints(
         minHeight: 40,
         maxHeight: 60,
-        maxWidth: screenWidth - 10,
+        maxWidth: widget.screenWidth - 10,
       ),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.only(
@@ -445,8 +452,8 @@ class cutomTabBar extends StatelessWidget {
               child: Container(
                 alignment: AlignmentDirectional.center,
                 constraints: BoxConstraints(
-                  maxWidth: screenWidth / 3,
-                  minWidth: screenWidth / 3,
+                  maxWidth: widget.screenWidth / 3,
+                  minWidth: widget.screenWidth / 3,
                   minHeight: 50,
                 ),
                 decoration: BoxDecoration(
@@ -498,8 +505,8 @@ class cutomTabBar extends StatelessWidget {
             child: Container(
               alignment: AlignmentDirectional.center,
               constraints: BoxConstraints(
-                maxWidth: screenWidth / 3,
-                minWidth: screenWidth / 3,
+                maxWidth: widget.screenWidth / 3,
+                minWidth: widget.screenWidth / 3,
                 minHeight: 50,
               ),
               decoration: BoxDecoration(

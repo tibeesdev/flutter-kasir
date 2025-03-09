@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'widgets_assets/products_input_page_widget.dart';
+import 'database_handler/database_instance.dart';
+import 'database_handler/database_model.dart';
 
 class InputProductsPage extends StatefulWidget {
   const InputProductsPage({super.key});
@@ -9,6 +11,42 @@ class InputProductsPage extends StatefulWidget {
 }
 
 class _InputProductsPageState extends State<InputProductsPage> {
+  // inisiasi instance
+  DatabaseInstance databaseInstance = DatabaseInstance();
+
+  // status loading database
+  bool isLoading = true;
+
+  //fetch produk
+  List<ProductsModel> data_produk = [];
+  Future fetchProducts() async {
+    // ambil data produk
+    List<ProductsModel> produk = await databaseInstance.showAllProducts();
+    setState(() {
+      data_produk = produk;
+      print('object');
+    });
+
+    print('berhasil fetch produk');
+  }
+
+  // load produk
+  Future loadDatabase() async {
+    await Future.wait([fetchProducts()]);
+    print('berhasil load database produk');
+    setState(() {
+      isLoading = false;
+    });
+  }
+
+  @override
+  void initState() {
+    // inisiasi database
+    loadDatabase();
+    // TODO: implement initState
+    super.initState();
+  }
+
   // data dummy
   List data = List.generate(10, (index) => index += 1);
   @override
@@ -28,10 +66,10 @@ class _InputProductsPageState extends State<InputProductsPage> {
           },
         ),
 
-        //trailing widget upload
+        //trailing widget status loading
         actions: [
           IconButton(
-            icon: Icon(Icons.upload),
+            icon: isLoading ? Icon(Icons.circle_outlined) : Icon(Icons.check),
             onPressed: () {
               ScaffoldMessenger.of(
                 context,
@@ -46,11 +84,13 @@ class _InputProductsPageState extends State<InputProductsPage> {
           headerDataProduk(screenWidth: screenWidth),
 
           // list barang
-          ListBarang(data: data),
-
-          // custom tabbar
-          cutomTabBar(screenWidth: screenWidth),
+          ListBarang(data_produk: data_produk, onInsertProducts: loadDatabase),
         ],
+      ),
+      // custom tabbar
+      bottomNavigationBar: cutomTabBar(
+        screenWidth: screenWidth,
+        onInsertProduct: loadDatabase,
       ),
     );
   }

@@ -64,7 +64,8 @@ class DatabaseInstance {
     $produk_kode TEXT NOT NULL UNIQUE,
     $produk_nama TEXT NOT NULL,
     $produk_modal INTEGER NOT NULL,
-    $produk_stok INTEGER NOT NULL)''');
+    $produk_stok INTEGER NOT NULL,
+    $produk_harga INTEGER NOT NULL)''');
 
     print('tabel produk berhasil dibuat');
 
@@ -155,5 +156,47 @@ class DatabaseInstance {
     var res =
         query.toList().map((e) => TransactionsModel.fromJson(e)).toList()[0];
     return res;
+  }
+
+  // kode produk
+  Future showProductsByKode(String kode_produk) async {
+    final db = await database();
+    final query = await db.query(
+      tabel_transaksi,
+      where: '$produk_kode = ?',
+      whereArgs: [kode_produk],
+    );
+    var res = query.toList().map((e) => ProductsModel.fromJson(e)).toList()[0];
+    return res;
+  }
+
+  // transaksi produk
+  // kode produk
+  Future showProductsTransactionsByKode(String kode_produk_transaksi) async {
+    final db = await database();
+    final query = await db.query(
+      tabel_transaksi,
+      where: '$transaksi_produk_kode_barang = ?',
+      whereArgs: [kode_produk_transaksi],
+    );
+    var res =
+        query
+            .toList()
+            .map((e) => ProductsTransactionsModel.fromJson(e))
+            .toList()[0];
+    return res;
+  }
+
+  // update data
+  // update transaksi
+  Future<int> updateTransactions(Map<String, dynamic> row) async {
+    final db = await database();
+    final query = await db.update(
+      tabel_transaksi,
+      row,
+      where: '$transaksi_kode = ?',
+      whereArgs: [row[transaksi_id]],
+    );
+    return query;
   }
 }

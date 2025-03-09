@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:kasirapp2/database_handler/database_instance.dart';
+import 'package:kasirapp2/database_handler/database_model.dart';
 import 'package:kasirapp2/main.dart';
 import 'package:kasirapp2/transaction_page.dart';
 
@@ -71,128 +73,151 @@ class headerDataProduk extends StatelessWidget {
 
 // list barang beserta harga dan stoknya
 
-class ListBarang extends StatelessWidget {
-  const ListBarang({super.key, required this.data});
+class ListBarang extends StatefulWidget {
+  ListBarang({
+    super.key,
+    required this.data_produk,
+    required this.onInsertProducts,
+  });
 
-  final List data;
+  List data_produk;
+  Future Function() onInsertProducts;
 
   @override
+  State<ListBarang> createState() => _ListBarangState();
+}
+
+class _ListBarangState extends State<ListBarang> {
+  @override
   Widget build(BuildContext context) {
-    return Flexible(
-      child: ListView.builder(
-        itemCount: data.length,
-        itemBuilder: (context, index) {
-          return Container(
-            margin: EdgeInsets.all(1),
-            constraints: BoxConstraints(maxHeight: 70, minHeight: 50),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              shape: BoxShape.rectangle,
-              color: Color.fromARGB(255, 255, 255, 255),
-              border: Border.all(color: Color(0xFF6e8aff), width: 2),
-            ),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                // nama barang dan id
-                Expanded(
-                  flex: 30,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      // nama barang
-                      Container(
-                        padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
+    return widget.data_produk.length == 0
+        ? Text('tidak ada data barang')
+        : Flexible(
+          child: ListView.builder(
+            itemCount: widget.data_produk.length,
+            itemBuilder: (context, index) {
+              ProductsModel produk = widget.data_produk[index];
+              return Container(
+                margin: EdgeInsets.all(1),
+                constraints: BoxConstraints(maxHeight: 70, minHeight: 50),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  shape: BoxShape.rectangle,
+                  color: Color.fromARGB(255, 255, 255, 255),
+                  border: Border.all(color: Color(0xFF6e8aff), width: 2),
+                ),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    // nama barang dan id
+                    Expanded(
+                      flex: 30,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          // nama barang
+                          Container(
+                            padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
+                            child: Text(
+                              produk.nama_barang.toString(),
+                              style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.w500,
+                                overflow: TextOverflow.clip,
+                              ),
+                            ),
+                          ),
+
+                          // id transaksi
+                          Container(
+                            padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
+                            child: Text(
+                              produk.kode_barang.toString(),
+                              style: TextStyle(
+                                fontSize: 10,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    // stok barang
+                    Expanded(
+                      flex: 20,
+                      child: Center(
                         child: Text(
-                          'nama barang $index',
+                          produk.stok_barang.toString(),
                           style: TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.w500,
-                            overflow: TextOverflow.clip,
                           ),
                         ),
                       ),
+                    ),
 
-                      // id transaksi
-                      Container(
-                        padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
+                    // modal
+                    Expanded(
+                      flex: 25,
+                      child: Center(
                         child: Text(
-                          'kode_barang $index',
+                          produk.modal_barang.toString(),
                           style: TextStyle(
-                            fontSize: 10,
-                            fontWeight: FontWeight.bold,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w500,
                           ),
                         ),
                       ),
-                    ],
-                  ),
-                ),
+                    ),
 
-                // stok barang
-                Expanded(
-                  flex: 20,
-                  child: Center(
-                    child: Text(
-                      'stok $index',
-                      style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w500,
+                    // harga
+                    Expanded(
+                      flex: 25,
+                      child: Center(
+                        child: Text(
+                          produk.harga_barang.toString(),
+                          style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
                       ),
                     ),
-                  ),
+                  ],
                 ),
-
-                // modal
-                Expanded(
-                  flex: 25,
-                  child: Center(
-                    child: Text(
-                      'modal $index',
-                      style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-                ),
-
-                // modal
-                Expanded(
-                  flex: 25,
-                  child: Center(
-                    child: Text(
-                      'harga jual $index',
-                      style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          );
-        },
-      ),
-    );
+              );
+            },
+          ),
+        );
   }
 }
 
 // custom tabbar
-class cutomTabBar extends StatelessWidget {
-  const cutomTabBar({super.key, required this.screenWidth});
+class cutomTabBar extends StatefulWidget {
+  cutomTabBar({
+    super.key,
+    required this.screenWidth,
+    required this.onInsertProduct,
+  });
 
   final double screenWidth;
+  Future Function() onInsertProduct;
 
+  @override
+  State<cutomTabBar> createState() => _cutomTabBarState();
+}
+
+class _cutomTabBarState extends State<cutomTabBar> {
   @override
   Widget build(BuildContext context) {
     return Container(
       constraints: BoxConstraints(
         minHeight: 40,
         maxHeight: 60,
-        maxWidth: screenWidth - 10,
+        maxWidth: widget.screenWidth - 10,
       ),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.only(
@@ -216,8 +241,8 @@ class cutomTabBar extends StatelessWidget {
               child: Container(
                 alignment: AlignmentDirectional.center,
                 constraints: BoxConstraints(
-                  maxWidth: screenWidth / 3,
-                  minWidth: screenWidth / 3,
+                  maxWidth: widget.screenWidth / 3,
+                  minWidth: widget.screenWidth / 3,
                   minHeight: 50,
                 ),
                 decoration: BoxDecoration(
@@ -254,7 +279,9 @@ class cutomTabBar extends StatelessWidget {
                   showDialog(
                     context: context,
                     builder: (context) {
-                      return TambahBarangDialog();
+                      return TambahBarangDialog(
+                        onInsertProducts: widget.onInsertProduct,
+                      );
                     },
                   );
                 },
@@ -278,8 +305,8 @@ class cutomTabBar extends StatelessWidget {
               child: Container(
                 alignment: AlignmentDirectional.center,
                 constraints: BoxConstraints(
-                  maxWidth: screenWidth / 3,
-                  minWidth: screenWidth / 3,
+                  maxWidth: widget.screenWidth / 3,
+                  minWidth: widget.screenWidth / 3,
                   minHeight: 50,
                 ),
                 decoration: BoxDecoration(
@@ -306,7 +333,9 @@ class cutomTabBar extends StatelessWidget {
 // alert dialog
 // untuk tambah barang
 class TambahBarangDialog extends StatefulWidget {
-  const TambahBarangDialog({super.key});
+  TambahBarangDialog({super.key, required this.onInsertProducts});
+
+  Future Function() onInsertProducts;
 
   @override
   State<TambahBarangDialog> createState() => _TambahBarangDialogState();
@@ -389,6 +418,8 @@ class _TambahBarangDialogState extends State<TambahBarangDialog> {
               validator: (value) {
                 if (value!.isEmpty) {
                   return 'data tidak boleh kosong';
+                } else if (int.tryParse(value) == null) {
+                  return 'data harus dalam angka';
                 }
               },
               controller: modal_barang_controller,
@@ -414,6 +445,8 @@ class _TambahBarangDialogState extends State<TambahBarangDialog> {
               validator: (value) {
                 if (value!.isEmpty) {
                   return 'data tidak boleh kosong';
+                } else if (int.tryParse(value) == null) {
+                  return 'data harus dalam angka';
                 }
               },
               controller: harga_barang_controller,
@@ -439,6 +472,8 @@ class _TambahBarangDialogState extends State<TambahBarangDialog> {
               validator: (value) {
                 if (value!.isEmpty) {
                   return 'data tidak boleh kosong';
+                } else if (int.tryParse(value) == null) {
+                  return 'data harus dalam angka';
                 }
               },
               controller: stok_barang_controller,
@@ -463,7 +498,26 @@ class _TambahBarangDialogState extends State<TambahBarangDialog> {
           },
           child: Text('batalkan'),
         ),
-        ElevatedButton(onPressed: () {}, child: Text('simpan')),
+        ElevatedButton(
+          onPressed: () async {
+            // inisiasi database
+            DatabaseInstance databaseInstance = DatabaseInstance();
+            await databaseInstance.insertProducts({
+              'harga_barang': int.tryParse(harga_barang_controller.text),
+              'modal_barang': int.tryParse(modal_barang_controller.text),
+              'stok_barang': int.tryParse(stok_barang_controller.text),
+              'nama_barang': nama_barang_controller.text,
+              'kode_barang': kode_barang_controller.text,
+            });
+            // fetch ulang data
+            await widget.onInsertProducts;
+            print('data berhasil diinput');
+
+            //tutup jendela
+            Navigator.pop(context);
+          },
+          child: Text('simpan'),
+        ),
       ],
     );
   }

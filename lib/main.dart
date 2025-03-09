@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kasirapp2/transaction_provider.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:kasirapp2/widgets_assets/main_page.dart';
@@ -35,27 +36,9 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  // list filter data
-  List filter_data = [
-    'semua',
-    'hari ini',
-    'minggu ini',
-    'minggu lalu',
-    'bulan ini',
-    'bulan lalu',
-    'custom',
-  ];
-  int filter_terpilih = 0;
   int total_modal = 50000;
   int total_keuntungan = 100000;
   int total_keuntungan_bersih = 0;
-
-  // fungsi untuk ubah nilai filter terpilih dari class filterJangkaWaktu
-  void updateFilter(int nilai_baru) {
-    setState(() {
-      filter_terpilih = nilai_baru;
-    });
-  }
 
   // inisiasi database
   DatabaseInstance databaseInstance = DatabaseInstance();
@@ -89,18 +72,32 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  Future fetchDatabase() async {
-    // ambil data transaksi
-    List<TransactionsModel> transaksi =
-        await databaseInstance.showAllTransactions();
-    data_transaksi = transaksi;
+  //fetch produk
+  Future fetchProducts() async {
     // ambil data produk
     List<ProductsModel> produk = await databaseInstance.showAllProducts();
-    data_produk = produk;
+    setState(() {
+      data_produk = produk;
+    });
+  }
+
+  // fetch produk transaksi
+  Future fetchProductsTransactions() async {
     // ambil data transaksi produk
     List<ProductsTransactionsModel> produk_transaksi =
         await databaseInstance.showAllTransactionsProducts();
-    data_produk_transaksi = produk_transaksi;
+    setState(() {
+      data_produk_transaksi = produk_transaksi;
+    });
+  }
+
+  Future fetchDatabase() async {
+    // ambil data transaksi
+    fetchTransactions();
+    // ambil data produk
+    fetchProducts();
+    // ambil data transaksi produk
+    fetchProductsTransactions();
 
     print('berhasil fetch database');
     return true;
@@ -115,6 +112,9 @@ class _MyHomePageState extends State<MyHomePage> {
       load_status = false;
     });
   }
+
+  // listenabel time filter
+  TimeFilter timeFilter = TimeFilter();
 
   @override
   Widget build(BuildContext context) {
@@ -165,11 +165,7 @@ class _MyHomePageState extends State<MyHomePage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             // kolom pilihan jangka waktu data
-            filterJangkaWaktu(
-              filter_data: filter_data,
-              filter_terpilih: filter_terpilih,
-              onUpdateFilter: updateFilter,
-            ),
+            filterJangkaWaktu(timeFilter: timeFilter),
 
             // kolom data transaksi
             dataTransaksi(
@@ -183,13 +179,19 @@ class _MyHomePageState extends State<MyHomePage> {
             headerDataTransaksi(screenWidth: screenWidth),
 
             // informasi transaksi berisi catatan, id transaksi, pengeluaran dan pemasukan
-            informasiTransaksi(data_transaksi: data_transaksi),
+            //informasiTransaksi(data_transaksi: data_transaksi),
+            ListenableBuilder(
+              listenable: timeFilter,
+              builder: (context, child) {
+                return Text(timeFilter.filter_terpilih.toString());
+              },
+            ),
           ],
         ),
       ),
       bottomNavigationBar: // tabbar custom
       // container awal
-      cutomTabBar(screenWidth: screenWidth),
+      cutomTabBar(screenWidth: screenWidth, data_produk: data_produk),
     );
   }
 }
