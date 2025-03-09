@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kasirapp2/database_handler/database_model.dart';
 import 'package:kasirapp2/main.dart';
 import 'package:kasirapp2/producs_input_page.dart';
 import 'package:kasirapp2/transaction_provider.dart';
@@ -345,15 +346,12 @@ class ListProducts extends StatefulWidget {
   ListProducts({
     super.key,
     required this.items_controllers,
-    required this.data,
-    required this.onUpdateController,
+    required this.data_produk,
   });
 
   //callback
   List<TextEditingController> items_controllers;
-  List data;
-
-  final Function(TextEditingController, String) onUpdateController;
+  List<ProductsModel> data_produk;
 
   @override
   State<ListProducts> createState() => _ListProductsState();
@@ -364,11 +362,14 @@ class _ListProductsState extends State<ListProducts> {
   Widget build(BuildContext context) {
     return Flexible(
       child: ListView.builder(
-        itemCount: widget.data.length,
+        itemCount: widget.data_produk.length,
         itemBuilder: (context, index) {
+          // data untuk setiap item
+          ProductsModel data = widget.data_produk[index];
           // buat variabel baru untuk controller
           TextEditingController item_controller =
               widget.items_controllers[index];
+
           return Container(
             margin: EdgeInsets.all(1),
             constraints: BoxConstraints(maxHeight: 65, minHeight: 50),
@@ -393,7 +394,7 @@ class _ListProductsState extends State<ListProducts> {
                       Container(
                         padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
                         child: Text(
-                          'nama barang $index',
+                          data.nama_barang.toString(),
                           style: TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.w500,
@@ -406,7 +407,7 @@ class _ListProductsState extends State<ListProducts> {
                       Container(
                         padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
                         child: Text(
-                          'id barang $index',
+                          data.kode_barang.toString(),
                           style: TextStyle(
                             fontSize: 10,
                             fontWeight: FontWeight.bold,
@@ -422,7 +423,7 @@ class _ListProductsState extends State<ListProducts> {
                   flex: 20,
                   child: Center(
                     child: Text(
-                      'harga $index',
+                      data.harga_barang.toString(),
                       style: TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.w500,
@@ -456,10 +457,10 @@ class _ListProductsState extends State<ListProducts> {
                               });
 
                               // callback fungsi untuk update data
-                              widget.onUpdateController(
-                                item_controller,
-                                item_kurang.toString(),
-                              );
+                              // widget.onUpdateController(
+                              //   item_controller,
+                              //   item_kurang.toString(),
+                              // );
                             },
                             icon: Icon(Icons.remove),
                           ),
@@ -501,10 +502,10 @@ class _ListProductsState extends State<ListProducts> {
                               setState(() {
                                 item_controller.text = item_tambah.toString();
                               });
-                              widget.onUpdateController(
-                                item_controller,
-                                item_tambah.toString(),
-                              );
+                              // widget.onUpdateController(
+                              //   item_controller,
+                              //   item_tambah.toString(),
+                              // );
                             },
                             icon: Icon(Icons.add),
                           ),
@@ -524,7 +525,11 @@ class _ListProductsState extends State<ListProducts> {
 
 // custom tabbar
 class cutomTabBar extends StatelessWidget {
-  cutomTabBar({super.key, required this.screenWidth, required this.dataBaseNotifier});
+  cutomTabBar({
+    super.key,
+    required this.screenWidth,
+    required this.dataBaseNotifier,
+  });
 
   DataBaseNotifier dataBaseNotifier;
 
@@ -609,8 +614,9 @@ class cutomTabBar extends StatelessWidget {
                   context,
                   MaterialPageRoute(
                     builder:
-                        (context) =>
-                            InputProductsPage(dataBaseNotifier: dataBaseNotifier),
+                        (context) => InputProductsPage(
+                          dataBaseNotifier: dataBaseNotifier,
+                        ),
                   ),
                 ),
             child: Padding(

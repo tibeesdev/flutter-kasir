@@ -34,6 +34,27 @@ class DataBaseNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
+  // masukkan data
+  // data transaksi
+  Future insertTransaction(Map<String, dynamic> row) async {
+    int kode = await _databaseInstance.insertTransactions(row);
+    print('status insert transaksi : $kode');
+    notifyListeners();
+  }
+
+  // data produk transaksi
+  Future insertProductsTransaction(
+    List<ProductsTransactionsModel> list_data,
+  ) async {
+    for (var element in list_data) {
+      await _databaseInstance.insertProductsTransactions({
+        'jumlah_item': element.jumlah_item.toString(),
+        'kode_barang': element.kode_barang.toString(),
+        'kode_transaksi': element.kode_transaksi.toString(),
+      });
+    }
+  }
+
   // hapus data
   // hapus produk berdasarkan kode
   Future deleteProduk(String kode_produk) async {

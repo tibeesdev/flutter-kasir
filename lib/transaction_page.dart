@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:kasirapp2/database_handler/database_model.dart';
 import 'package:kasirapp2/transaction_provider.dart';
 import 'widgets_assets/transaction_page_widget.dart';
 
@@ -21,7 +22,7 @@ class _TransactionPageState extends State<TransactionPage> {
   TextEditingController cari_barang = TextEditingController();
   List<TextEditingController> items_controllers =
       []; // controller untuk list barang
-  List data = List.generate(10, (index) => index += 1);
+  List<ProductsModel> data_produk = [];
 
   // fungsi callback
   // callback text cari barang
@@ -45,22 +46,19 @@ class _TransactionPageState extends State<TransactionPage> {
     });
   }
 
-  // callback jumlah item barang
-  void onUpdateController(TextEditingController item, String value) {
-    setState(() {
-      item.text = value;
-    });
-  }
+
 
   // pembuatan controller ketika data dimuat
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    // fetch data produk
+    data_produk = widget.dataBaseNotifier.data_produk;
     // membuat controller dummy
     items_controllers = List.generate(
-      data.length,
-      (index) => TextEditingController(text: index.toString()),
+      data_produk.length,
+      (index) => TextEditingController(text: '0'),
     );
   }
 
@@ -143,15 +141,17 @@ class _TransactionPageState extends State<TransactionPage> {
             // terdiri dari nama di bawahnya ada id, disampingnya ada harga jual di bagian kanan ada tombol tambah dan kurang
             ListProducts(
               items_controllers: items_controllers,
-              data: data,
-              onUpdateController: onUpdateController,
+              data_produk: data_produk,
             ),
 
             // debug
             // Text(items_controllers[0].text.toString()),
             // Text(cari_barang.text.toString()),
             // Text(_selectedDate.toString()),
-            cutomTabBar(screenWidth: screenWidth, dataBaseNotifier: widget.dataBaseNotifier),
+            cutomTabBar(
+              screenWidth: screenWidth,
+              dataBaseNotifier: widget.dataBaseNotifier,
+            ),
           ],
         ),
       ),
