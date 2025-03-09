@@ -36,6 +36,10 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  // listenable time filter digunakan di semua class
+  TimeFilter timeFilter = TimeFilter();
+  // changenotofier database
+  DataBaseNotifier dataBaseNotifier = DataBaseNotifier();
   int total_modal = 50000;
   int total_keuntungan = 100000;
   int total_keuntungan_bersih = 0;
@@ -56,30 +60,11 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   // data dari database
-  List<TransactionsModel> data_transaksi = []; // list data transaksi
-  List<ProductsModel> data_produk = []; // list data produk
   List<ProductsTransactionsModel> data_produk_transaksi =
       []; //list data produuk transaksi
   bool load_status = true;
 
-  // fetchdatabase
-  Future fetchTransactions() async {
-    // ambil data transaksi
-    List<TransactionsModel> transaksi =
-        await databaseInstance.showAllTransactions();
-    setState(() {
-      data_transaksi = transaksi;
-    });
-  }
 
-  //fetch produk
-  Future fetchProducts() async {
-    // ambil data produk
-    List<ProductsModel> produk = await databaseInstance.showAllProducts();
-    setState(() {
-      data_produk = produk;
-    });
-  }
 
   // fetch produk transaksi
   Future fetchProductsTransactions() async {
@@ -93,9 +78,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Future fetchDatabase() async {
     // ambil data transaksi
-    fetchTransactions();
+    dataBaseNotifier.fetchTransactions();
     // ambil data produk
-    fetchProducts();
+    dataBaseNotifier.fetchProducts();
     // ambil data transaksi produk
     fetchProductsTransactions();
 
@@ -112,9 +97,6 @@ class _MyHomePageState extends State<MyHomePage> {
       load_status = false;
     });
   }
-
-  // listenabel time filter
-  TimeFilter timeFilter = TimeFilter();
 
   @override
   Widget build(BuildContext context) {
@@ -148,13 +130,11 @@ class _MyHomePageState extends State<MyHomePage> {
                 'total_harga': 50000,
                 'total_keuntungan': 25000,
                 'catatan_transaksi': 'test transaksi',
-                'kode_transaksi': 'kode 7',
+                'kode_transaksi': 'kode 1',
               });
               print(kode.toString());
-              setState(() {
-                fetchTransactions();
-              });
-              print(data_transaksi.length);
+              dataBaseNotifier.fetchTransactions();
+              print(dataBaseNotifier.data_transaksi.length);
             },
           ),
         ],
@@ -179,7 +159,15 @@ class _MyHomePageState extends State<MyHomePage> {
             headerDataTransaksi(screenWidth: screenWidth),
 
             // informasi transaksi berisi catatan, id transaksi, pengeluaran dan pemasukan
-            //informasiTransaksi(data_transaksi: data_transaksi),
+            ListenableBuilder(
+              listenable: dataBaseNotifier,
+              builder: (context, child) {
+                return informasiTransaksi(
+                  data_transaksi: dataBaseNotifier.data_transaksi,
+                );
+              },
+            ),
+
             ListenableBuilder(
               listenable: timeFilter,
               builder: (context, child) {
@@ -191,7 +179,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       bottomNavigationBar: // tabbar custom
       // container awal
-      cutomTabBar(screenWidth: screenWidth, data_produk: data_produk),
+      cutomTabBar(screenWidth: screenWidth),
     );
   }
 }

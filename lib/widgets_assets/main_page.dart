@@ -56,7 +56,8 @@ class _filterJangkaWaktuState extends State<filterJangkaWaktu> {
                     child: Container(
                       padding: EdgeInsets.all(10),
                       child: Text(
-                        widget.timeFilter
+                        widget
+                            .timeFilter
                             .filter_data[index], //widget.filter_data[index],
                         style:
                             terpilih
@@ -405,14 +406,9 @@ class _informasiTransaksiState extends State<informasiTransaksi> {
 
 // tabbar custom
 class cutomTabBar extends StatefulWidget {
-  cutomTabBar({
-    super.key,
-    required this.screenWidth,
-    required this.data_produk,
-  });
+  cutomTabBar({super.key, required this.screenWidth});
 
   final double screenWidth;
-  List<ProductsModel> data_produk; // data untuk dipass ke dalam page product
 
   @override
   State<cutomTabBar> createState() => _cutomTabBarState();
