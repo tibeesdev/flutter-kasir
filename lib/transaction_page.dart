@@ -55,16 +55,28 @@ class _TransactionPageState extends State<TransactionPage> {
     int data_index = list_produk.indexWhere(
       (data) => data.kode_barang == produk.kode_barang,
     );
-
+    ///////// coba ganti pakai cath error besok
     if (data_index != -1) {
+      print('data ditemukan');
       // Data ditemukan
       // jumlah item
       int item = produk.jumlah_item!;
-      // masukkan item baru
-      setState(() {
-        list_produk[data_index] = ProductsTransactionsModel(jumlah_item: item);
-      });
+      // cek jika item 0 maka hapus dari list
+      if (item == 0) {
+        print('item 0 di : ${produk.kode_barang}');
+        setState(() {
+          list_produk.removeAt(data_index);
+        });
+      } else {
+        // masukkan item baru
+        setState(() {
+          list_produk[data_index] = ProductsTransactionsModel(
+            jumlah_item: item,
+          );
+        });
+      }
     } else {
+      print('tambah data');
       // Data tidak ditemukan
       //tambahkan data ke dalam list
       setState(() {
@@ -199,7 +211,7 @@ class _TransactionPageState extends State<TransactionPage> {
               dataBaseNotifier: widget.dataBaseNotifier,
             ),
 
-            Text(list_produk.toString()),
+            Text(list_produk.length.toString()),
           ],
         ),
       ),

@@ -474,13 +474,27 @@ class _ListProductsState extends State<ListProducts> {
                               }
                               ;
                               // kurangi angka jika angka tidak kurang dari 0
-                              if (int.parse(item_controller.text) != 0) {
+                              if (int.parse(item_controller.text) > 0) {
                                 int item_kurang =
                                     int.parse(item_controller.text) - 1;
                                 // masukkan ke controller
                                 setState(() {
                                   item_controller.text = item_kurang.toString();
                                 });
+
+                                // format data
+                                ProductsTransactionsModel produk_transaksi =
+                                    ProductsTransactionsModel(
+                                      jumlah_item: int.parse(
+                                        item_controller.text,
+                                      ),
+                                      kode_barang: data.kode_barang,
+                                      kode_transaksi: kode_transaksi,
+                                    );
+                                // masukkan data ke parent class
+                                widget.onChangeProductList(produk_transaksi);
+                              } else {
+                                //print('data 0');
                                 // format data
                                 ProductsTransactionsModel produk_transaksi =
                                     ProductsTransactionsModel(
@@ -493,6 +507,7 @@ class _ListProductsState extends State<ListProducts> {
                                 // masukkan data ke parent class
                                 widget.onChangeProductList(produk_transaksi);
                               }
+                              print(item_controller.text);
 
                               // callback fungsi untuk update data
                               // widget.onUpdateController(
