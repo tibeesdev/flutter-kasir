@@ -50,28 +50,47 @@ class _TransactionPageState extends State<TransactionPage> {
 
   // ketika jumlah item di produk berubah, fungsi callback di ListProducts
   // ketika ditambah
-  void onAddProductList(ProductsTransactionsModel produk) {
+  void onChangeProductList(ProductsTransactionsModel produk) {
     // cek jika data sudah ada di dalam list
-    try {
-      // cek index daata
-      int data_index = list_produk.indexWhere(
-        (data) => data.kode_barang == produk.kode_barang,
-      );
-      // jumlah tem
+    int data_index = list_produk.indexWhere(
+      (data) => data.kode_barang == produk.kode_barang,
+    );
+
+    if (data_index != -1) {
+      // Data ditemukan
+      // jumlah item
       int item = produk.jumlah_item!;
       // masukkan item baru
       setState(() {
         list_produk[data_index] = ProductsTransactionsModel(jumlah_item: item);
-
       });
-    } catch (e) {
+    } else {
+      // Data tidak ditemukan
       //tambahkan data ke dalam list
       setState(() {
         list_produk.add(produk);
       });
-      
     }
 
+    // try {
+    //   // cek index daata
+    //   int data_index = list_produk.indexWhere(
+    //     (data) => data.kode_barang == produk.kode_barang,
+    //   );
+    //   // jumlah item
+    //   int item = produk.jumlah_item!;
+    //   // masukkan item baru
+    //   setState(() {
+    //     list_produk[data_index] = ProductsTransactionsModel(jumlah_item: item);
+
+    //   });
+    // } catch (e) {
+    //   //tambahkan data ke dalam list
+    //   setState(() {
+    //     list_produk.add(produk);
+    //   });
+
+    // }
   }
 
   // pembuatan controller ketika data dimuat
@@ -168,6 +187,7 @@ class _TransactionPageState extends State<TransactionPage> {
             ListProducts(
               items_controllers: items_controllers,
               data_produk: data_produk,
+              onChangeProductList: onChangeProductList,
             ),
 
             // debug
@@ -178,6 +198,8 @@ class _TransactionPageState extends State<TransactionPage> {
               screenWidth: screenWidth,
               dataBaseNotifier: widget.dataBaseNotifier,
             ),
+
+            Text(list_produk.toString()),
           ],
         ),
       ),

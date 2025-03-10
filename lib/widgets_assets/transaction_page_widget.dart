@@ -3,6 +3,8 @@ import 'package:kasirapp2/database_handler/database_model.dart';
 import 'package:kasirapp2/main.dart';
 import 'package:kasirapp2/producs_input_page.dart';
 import 'package:kasirapp2/transaction_provider.dart';
+import 'package:intl/intl.dart';
+import 'dart:math';
 
 // card informasi transaks berisi pengeluaran, pemasukan dan total
 // class dipanggi di transaction_page
@@ -347,17 +349,40 @@ class ListProducts extends StatefulWidget {
     super.key,
     required this.items_controllers,
     required this.data_produk,
+    required this.onChangeProductList,
   });
 
   //callback
   List<TextEditingController> items_controllers;
   List<ProductsModel> data_produk;
+  Function(ProductsTransactionsModel) onChangeProductList;
 
   @override
   State<ListProducts> createState() => _ListProductsState();
 }
 
 class _ListProductsState extends State<ListProducts> {
+  // kode transaksi
+  String kode_transaksi = '';
+  @override
+  void initState() {
+    // kode transaksi
+    getRandomFormattedString();
+    // TODO: implement initState
+
+    super.initState();
+  }
+
+  void getRandomFormattedString() {
+    String formattedDate = DateFormat('yyyyMMddHHmmss').format(DateTime.now());
+    String randomStr = Random().nextInt(99999).toString().padLeft(5, '0');
+    setState(() {
+      kode_transaksi = "${formattedDate}_$randomStr";
+    });
+
+    //return "${formattedDate}_$randomStr";
+  }
+
   @override
   Widget build(BuildContext context) {
     return Flexible(
@@ -448,13 +473,26 @@ class _ListProductsState extends State<ListProducts> {
                                 item_controller.text = '0';
                               }
                               ;
-                              // kurangi angka
-                              int item_kurang =
-                                  int.parse(item_controller.text) - 1;
-                              // masukkan ke controller
-                              setState(() {
-                                item_controller.text = item_kurang.toString();
-                              });
+                              // kurangi angka jika angka tidak kurang dari 0
+                              if (int.parse(item_controller.text) != 0) {
+                                int item_kurang =
+                                    int.parse(item_controller.text) - 1;
+                                // masukkan ke controller
+                                setState(() {
+                                  item_controller.text = item_kurang.toString();
+                                });
+                                // format data
+                                ProductsTransactionsModel produk_transaksi =
+                                    ProductsTransactionsModel(
+                                      jumlah_item: int.parse(
+                                        item_controller.text,
+                                      ),
+                                      kode_barang: data.kode_barang,
+                                      kode_transaksi: kode_transaksi,
+                                    );
+                                // masukkan data ke parent class
+                                widget.onChangeProductList(produk_transaksi);
+                              }
 
                               // callback fungsi untuk update data
                               // widget.onUpdateController(
@@ -483,7 +521,6 @@ class _ListProductsState extends State<ListProducts> {
                                 // cek jika value != 0 maka masukkan ke dalam list
                                 if (item_controller.text != 0) {
                                   //list_
-                                  
                                 }
                               });
                             },
@@ -507,6 +544,16 @@ class _ListProductsState extends State<ListProducts> {
                               setState(() {
                                 item_controller.text = item_tambah.toString();
                               });
+                              ProductsTransactionsModel produk_transaksi =
+                                  ProductsTransactionsModel(
+                                    jumlah_item: int.parse(
+                                      item_controller.text,
+                                    ),
+                                    kode_barang: data.kode_barang,
+                                    kode_transaksi: kode_transaksi,
+                                  );
+                              // masukkan data ke parent class
+                              widget.onChangeProductList(produk_transaksi);
                               // widget.onUpdateController(
                               //   item_controller,
                               //   item_tambah.toString(),
@@ -604,9 +651,8 @@ class cutomTabBar extends StatelessWidget {
               ),
               child: FloatingActionButton(
                 // simpan transaksi
-                onPressed: () async{
+                onPressed: () async {
                   //await dataBaseNotifier.insertTransaction(row)
-
                 },
                 shape: CircleBorder(),
                 backgroundColor: Color(0xFF6e8aff),
