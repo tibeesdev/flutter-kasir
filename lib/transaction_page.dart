@@ -23,6 +23,8 @@ class _TransactionPageState extends State<TransactionPage> {
   List<TextEditingController> items_controllers =
       []; // controller untuk list barang
   List<ProductsModel> data_produk = [];
+  // list produk yang dibeli (jika lebih dari 0)
+  List<ProductsTransactionsModel> list_produk = [];
 
   // fungsi callback
   // callback text cari barang
@@ -46,7 +48,31 @@ class _TransactionPageState extends State<TransactionPage> {
     });
   }
 
+  // ketika jumlah item di produk berubah, fungsi callback di ListProducts
+  // ketika ditambah
+  void onAddProductList(ProductsTransactionsModel produk) {
+    // cek jika data sudah ada di dalam list
+    try {
+      // cek index daata
+      int data_index = list_produk.indexWhere(
+        (data) => data.kode_barang == produk.kode_barang,
+      );
+      // jumlah tem
+      int item = produk.jumlah_item!;
+      // masukkan item baru
+      setState(() {
+        list_produk[data_index] = ProductsTransactionsModel(jumlah_item: item);
 
+      });
+    } catch (e) {
+      //tambahkan data ke dalam list
+      setState(() {
+        list_produk.add(produk);
+      });
+      
+    }
+
+  }
 
   // pembuatan controller ketika data dimuat
   @override

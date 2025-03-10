@@ -62,6 +62,15 @@ class DataBaseNotifier extends ChangeNotifier {
     print('status hapus produk : $kode');
     notifyListeners();
   }
+
+  // menambahkan list barang ke dalam variabel
+  List<ProductsTransactionsModel> _list_produk = [];
+  List<ProductsTransactionsModel> get list_produk => _list_produk;
+  void onAddProduct(ProductsTransactionsModel produk) {
+    _list_produk.add(produk);
+    notifyListeners();
+  }
+  
 }
 
 class TimeFilter extends ChangeNotifier {

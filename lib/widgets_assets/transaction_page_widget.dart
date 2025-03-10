@@ -480,6 +480,11 @@ class _ListProductsState extends State<ListProducts> {
                             onChanged: (value) {
                               setState(() {
                                 item_controller.text = value;
+                                // cek jika value != 0 maka masukkan ke dalam list
+                                if (item_controller.text != 0) {
+                                  //list_
+                                  
+                                }
                               });
                             },
                           ),
@@ -598,7 +603,11 @@ class cutomTabBar extends StatelessWidget {
                 color: Colors.white,
               ),
               child: FloatingActionButton(
-                onPressed: () {},
+                // simpan transaksi
+                onPressed: () async{
+                  //await dataBaseNotifier.insertTransaction(row)
+
+                },
                 shape: CircleBorder(),
                 backgroundColor: Color(0xFF6e8aff),
                 foregroundColor: Colors.white,

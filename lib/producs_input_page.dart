@@ -16,11 +16,10 @@ class InputProductsPage extends StatefulWidget {
 class _InputProductsPageState extends State<InputProductsPage> {
   // inisiasi instance
   DatabaseInstance databaseInstance = DatabaseInstance();
+  
 
   // status loading database
   bool isLoading = true;
-
-
 
   // load produk
   Future loadDatabase() async {
@@ -38,6 +37,8 @@ class _InputProductsPageState extends State<InputProductsPage> {
     // TODO: implement initState
     super.initState();
   }
+
+
 
   // data dummy
   List data = List.generate(10, (index) => index += 1);
