@@ -40,6 +40,8 @@ class _TransactionPageState extends State<TransactionPage> {
   void onUpdateCariBarang(String nilai_cari_barang) {
     setState(() {
       cari_barang.text = nilai_cari_barang;
+      // panggil fungsi filter
+      _filteredList(nilai_cari_barang);
     });
   }
 
