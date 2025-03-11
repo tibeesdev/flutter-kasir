@@ -29,6 +29,8 @@ class _TransactionPageState extends State<TransactionPage> {
   TextEditingController cari_barang = TextEditingController();
   List<TextEditingController> items_controllers =
       []; // controller untuk list barang
+  List<ProductsModel> original_data_produk = [];
+  // list produk berdasarkan filter user dari input user
   List<ProductsModel> data_produk = [];
   // list produk yang dibeli (jika lebih dari 0)
   List<ProductsTransactionsModel> list_produk = [];
@@ -105,17 +107,19 @@ class _TransactionPageState extends State<TransactionPage> {
     // for loop untuk hitung setiap item
     for (ProductsTransactionsModel element in list_produk) {
       // car index untuk produk dengan kode yang sama
-      int data_index = data_produk.indexWhere(
+      int data_index = original_data_produk.indexWhere(
         (data) => data.kode_barang == element.kode_barang,
       );
       setState(() {
         // hitung total harga
         int harga =
-            element.jumlah_item! * data_produk[data_index].harga_barang!;
+            element.jumlah_item! *
+            original_data_produk[data_index].harga_barang!;
         total_keuntungan = total_keuntungan + harga;
         // total modal
         int modal =
-            element.jumlah_item! * data_produk[data_index].modal_barang!;
+            element.jumlah_item! *
+            original_data_produk[data_index].modal_barang!;
         total_modal = total_modal + modal;
 
         total_keuntungan_bersih = total_keuntungan - total_modal;
@@ -148,6 +152,34 @@ class _TransactionPageState extends State<TransactionPage> {
     print('berhasil input transaksi');
   }
 
+  // untuk filter list sesuai dengan input user
+  // dicari berdasarkan nama dan kode barang
+
+  // filter list data yang akan ditampilkan berdasarkan input user
+  void _filteredList(String inputData) {
+    List<ProductsModel> result = [];
+    if (inputData.length == 0) {
+      result = original_data_produk;
+    } else {
+      result =
+          original_data_produk
+              .where(
+                (element) =>
+                    element.nama_barang!.toLowerCase().contains(
+                      inputData.toLowerCase(),
+                    ) ||
+                    element.kode_barang!.toLowerCase().contains(
+                      inputData.toLowerCase(),
+                    ),
+              )
+              .toList();
+    }
+    print(result.length.toString());
+
+    data_produk = result;
+    setState(() {});
+  }
+
   // pembuatan controller ketika data dimuat
   @override
   void initState() {
@@ -156,10 +188,10 @@ class _TransactionPageState extends State<TransactionPage> {
     // TODO: implement initState
     super.initState();
     // fetch data produk
-    data_produk = widget.dataBaseNotifier.data_produk;
+    original_data_produk = widget.dataBaseNotifier.data_produk;
     // membuat controller dummy
     items_controllers = List.generate(
-      data_produk.length,
+      original_data_produk.length,
       (index) => TextEditingController(text: '0'),
     );
   }
