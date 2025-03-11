@@ -350,37 +350,25 @@ class ListProducts extends StatefulWidget {
     required this.items_controllers,
     required this.data_produk,
     required this.onChangeProductList,
+    required this.kode_transaksi,
   });
 
   //callback
   List<TextEditingController> items_controllers;
   List<ProductsModel> data_produk;
   Function(ProductsTransactionsModel) onChangeProductList;
+  String kode_transaksi;
 
   @override
   State<ListProducts> createState() => _ListProductsState();
 }
 
 class _ListProductsState extends State<ListProducts> {
-  // kode transaksi
-  String kode_transaksi = '';
   @override
   void initState() {
-    // kode transaksi
-    getRandomFormattedString();
     // TODO: implement initState
 
     super.initState();
-  }
-
-  void getRandomFormattedString() {
-    String formattedDate = DateFormat('yyyyMMddHHmmss').format(DateTime.now());
-    String randomStr = Random().nextInt(99999).toString().padLeft(5, '0');
-    setState(() {
-      kode_transaksi = "${formattedDate}_$randomStr";
-    });
-
-    //return "${formattedDate}_$randomStr";
   }
 
   @override
@@ -471,7 +459,8 @@ class _ListProductsState extends State<ListProducts> {
                               // ubah menjadi int
                               if (int.tryParse(item_controller.text) == null) {
                                 item_controller.text = '0';
-                              };
+                              }
+                              ;
                               // kurangi angka jika angka tidak kurang dari 0
                               if (int.parse(item_controller.text) > 0) {
                                 int item_kurang =
@@ -488,7 +477,7 @@ class _ListProductsState extends State<ListProducts> {
                                         item_controller.text,
                                       ),
                                       kode_barang: data.kode_barang,
-                                      kode_transaksi: kode_transaksi,
+                                      kode_transaksi: widget.kode_transaksi,
                                     );
                                 // masukkan data ke parent class
                                 widget.onChangeProductList(produk_transaksi);
@@ -501,7 +490,7 @@ class _ListProductsState extends State<ListProducts> {
                                         item_controller.text,
                                       ),
                                       kode_barang: data.kode_barang,
-                                      kode_transaksi: kode_transaksi,
+                                      kode_transaksi: widget.kode_transaksi,
                                     );
                                 // masukkan data ke parent class
                                 widget.onChangeProductList(produk_transaksi);
@@ -564,7 +553,7 @@ class _ListProductsState extends State<ListProducts> {
                                       item_controller.text,
                                     ),
                                     kode_barang: data.kode_barang,
-                                    kode_transaksi: kode_transaksi,
+                                    kode_transaksi: widget.kode_transaksi,
                                   );
                               // masukkan data ke parent class
                               widget.onChangeProductList(produk_transaksi);
@@ -595,9 +584,11 @@ class cutomTabBar extends StatelessWidget {
     super.key,
     required this.screenWidth,
     required this.dataBaseNotifier,
+    required this.addTransaction,
   });
 
   DataBaseNotifier dataBaseNotifier;
+  void Function() addTransaction;
 
   final double screenWidth;
 
@@ -665,8 +656,9 @@ class cutomTabBar extends StatelessWidget {
               ),
               child: FloatingActionButton(
                 // simpan transaksi
-                onPressed: () async {
+                onPressed: () {
                   //await dataBaseNotifier.insertTransaction(row)
+                  addTransaction();
                 },
                 shape: CircleBorder(),
                 backgroundColor: Color(0xFF6e8aff),
