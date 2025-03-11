@@ -16,6 +16,10 @@ class TransactionPage extends StatefulWidget {
 }
 
 class _TransactionPageState extends State<TransactionPage> {
+  // variabel keutungan untuk di bagaian card informasi transaksi di bagian atas
+  int total_modal = 0;
+  int total_keuntungan = 0;
+  int total_keuntungan_bersih = 0;
   // kode transaksi
   String kode_transaksi = '';
   // inisiasi tanggal awal
@@ -94,32 +98,37 @@ class _TransactionPageState extends State<TransactionPage> {
   // fungsi diapnggil di tombol simpan
   void addTransaction() {
     // total modal
-    int total_modal = 0;
+    //int total_modal = 0;
 
     // total modal
-    int total_harga = 0;
+    //int total_harga = 0;
     // for loop untuk hitung setiap item
     for (ProductsTransactionsModel element in list_produk) {
       // car index untuk produk dengan kode yang sama
       int data_index = data_produk.indexWhere(
         (data) => data.kode_barang == element.kode_barang,
       );
-      // hitung total harga
-      int harga = element.jumlah_item! * data_produk[data_index].harga_barang!;
-      total_harga = total_harga + harga;
-      // total modal
-      int modal = element.jumlah_item! * data_produk[data_index].modal_barang!;
-      total_modal = total_modal + modal;
+      setState(() {
+        // hitung total harga
+        int harga =
+            element.jumlah_item! * data_produk[data_index].harga_barang!;
+        total_keuntungan = total_keuntungan + harga;
+        // total modal
+        int modal =
+            element.jumlah_item! * data_produk[data_index].modal_barang!;
+        total_modal = total_modal + modal;
 
-      print(total_harga.toString());
+        total_keuntungan_bersih = total_keuntungan - total_modal;
+      });
+
+      print(total_modal.toString());
     }
     TransactionsModel transaksi = TransactionsModel(
       catatan_transaksi: catatan_transaksi.text,
       kode_transaksi: kode_transaksi,
-      total_harga: total_harga,
+      total_harga: total_modal,
       total_keuntungan:
-          total_harga -
-          total_modal, // total keuntungan dari total harga dikurangi total modal
+          total_keuntungan_bersih, // total keuntungan dari total harga dikurangi total modal
       total_modal: total_modal,
     );
     // input produk transaksi menggunakan database notifier
@@ -173,9 +182,7 @@ class _TransactionPageState extends State<TransactionPage> {
     // ukuran layar
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
-    int total_modal = 10000;
-    int total_keuntungan = 20000;
-    int total_keuntungan_bersih = total_keuntungan - total_modal;
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
