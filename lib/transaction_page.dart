@@ -55,54 +55,27 @@ class _TransactionPageState extends State<TransactionPage> {
     int data_index = list_produk.indexWhere(
       (data) => data.kode_barang == produk.kode_barang,
     );
-    ///////// coba ganti pakai cath error besok
+
+    // jika data ditemukan
     if (data_index != -1) {
-      print('data ditemukan');
-      // Data ditemukan
-      // jumlah item
-      int item = produk.jumlah_item!;
-      // cek jika item 0 maka hapus dari list
-      if (item == 0) {
-        print('item 0 di : ${produk.kode_barang}');
-        setState(() {
+      setState(() {
+        int item = produk.jumlah_item!;
+        print(item);
+        list_produk[data_index].jumlah_item = item;
+        print(list_produk[data_index].jumlah_item);
+        // jika jumlah item 0 maka remove saja dari list
+        if (item == 0) {
           list_produk.removeAt(data_index);
-        });
-      } else {
-        // masukkan item baru
-        setState(() {
-          list_produk[data_index] = ProductsTransactionsModel(
-            jumlah_item: item,
-          );
-        });
-      }
+          print(data_index.toString());
+        }
+      });
     } else {
-      print('tambah data');
-      // Data tidak ditemukan
-      //tambahkan data ke dalam list
+      // jika data tdak ditemukan
       setState(() {
         list_produk.add(produk);
       });
     }
 
-    // try {
-    //   // cek index daata
-    //   int data_index = list_produk.indexWhere(
-    //     (data) => data.kode_barang == produk.kode_barang,
-    //   );
-    //   // jumlah item
-    //   int item = produk.jumlah_item!;
-    //   // masukkan item baru
-    //   setState(() {
-    //     list_produk[data_index] = ProductsTransactionsModel(jumlah_item: item);
-
-    //   });
-    // } catch (e) {
-    //   //tambahkan data ke dalam list
-    //   setState(() {
-    //     list_produk.add(produk);
-    //   });
-
-    // }
   }
 
   // pembuatan controller ketika data dimuat
@@ -211,7 +184,7 @@ class _TransactionPageState extends State<TransactionPage> {
               dataBaseNotifier: widget.dataBaseNotifier,
             ),
 
-            Text(list_produk.length.toString()),
+            Text(list_produk.toString()),
           ],
         ),
       ),

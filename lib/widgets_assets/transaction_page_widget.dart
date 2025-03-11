@@ -471,8 +471,7 @@ class _ListProductsState extends State<ListProducts> {
                               // ubah menjadi int
                               if (int.tryParse(item_controller.text) == null) {
                                 item_controller.text = '0';
-                              }
-                              ;
+                              };
                               // kurangi angka jika angka tidak kurang dari 0
                               if (int.parse(item_controller.text) > 0) {
                                 int item_kurang =
