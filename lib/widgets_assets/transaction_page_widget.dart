@@ -659,11 +659,28 @@ class cutomTabBar extends StatelessWidget {
                 onPressed: () {
                   //await dataBaseNotifier.insertTransaction(row)
                   addTransaction();
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        actions: [
+                          // batalkan
+                          ElevatedButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: Text('ok'),
+                          ),
+                        ],
+                        title: Text('Transaksi berhasil ditambahakan'),
+                      );
+                    },
+                  );
                 },
                 shape: CircleBorder(),
                 backgroundColor: Color(0xFF6e8aff),
                 foregroundColor: Colors.white,
-                child: Icon(Icons.add),
+                child: Icon(Icons.save),
               ),
             ),
           ),
