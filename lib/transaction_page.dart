@@ -18,7 +18,7 @@ class TransactionPage extends StatefulWidget {
 class _TransactionPageState extends State<TransactionPage> {
   // variabel keutungan untuk di bagaian card informasi transaksi di bagian atas
   int total_modal = 0;
-  int total_keuntungan = 0;
+  int total_harga = 0;
   int total_keuntungan_bersih = 0;
   // kode transaksi
   String kode_transaksi = '';
@@ -112,7 +112,7 @@ class _TransactionPageState extends State<TransactionPage> {
       local_keuntungan = local_harga - local_modal;
     }
     total_modal = local_modal;
-    total_keuntungan = local_keuntungan;
+    total_harga = local_harga;
     total_keuntungan_bersih = local_keuntungan;
   }
 
@@ -139,7 +139,7 @@ class _TransactionPageState extends State<TransactionPage> {
     TransactionsModel transaksi = TransactionsModel(
       catatan_transaksi: catatan_transaksi.text,
       kode_transaksi: kode_transaksi,
-      total_harga: total_modal,
+      total_harga: total_harga,
       total_keuntungan:
           total_keuntungan_bersih, // total keuntungan dari total harga dikurangi total modal
       total_modal: total_modal,
@@ -261,7 +261,7 @@ class _TransactionPageState extends State<TransactionPage> {
               child: dataTransaksi(
                 screenWidth: screenWidth,
                 total_modal: total_modal,
-                total_keuntungan: total_keuntungan,
+                total_keuntungan: total_harga,
                 total_keuntungan_bersih: total_keuntungan_bersih,
               ),
             ),
