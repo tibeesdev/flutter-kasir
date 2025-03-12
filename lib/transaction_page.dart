@@ -86,6 +86,34 @@ class _TransactionPageState extends State<TransactionPage> {
         list_produk.add(produk);
       });
     }
+    transactionCounter();
+
+    print('total_modal : $total_modal');
+  }
+
+  // hitung modal, keuntungan dan harga total
+  void transactionCounter() {
+    // variabel lokal
+    int local_modal = 0;
+    int local_harga = 0;
+    int local_keuntungan = 0;
+    // cari index barang di original produk berdasarkan kode barang di list produk yang dibeli
+    for (var element in list_produk) {
+      int index = original_data_produk.indexWhere(
+        (data) => data.kode_barang == element.kode_barang,
+      );
+      // modal dan harga barang
+      int element_modal = original_data_produk[index].modal_barang!;
+      int element_harga = original_data_produk[index].harga_barang!;
+      // jumlah item produk yang dibeli
+      int jumlah_item = element.jumlah_item!;
+      local_modal = element_modal * jumlah_item + local_modal;
+      local_harga = element_harga * jumlah_item + local_harga;
+      local_keuntungan = local_harga - local_modal;
+    }
+    total_modal = local_modal;
+    total_keuntungan = local_keuntungan;
+    total_keuntungan_bersih = local_keuntungan;
   }
 
   void getRandomFormattedString() {
@@ -101,33 +129,12 @@ class _TransactionPageState extends State<TransactionPage> {
   // remap data transaksi agar bisa diinput
   // fungsi diapnggil di tombol simpan
   void addTransaction() {
-    // total modal
-    //int total_modal = 0;
-
-    // total modal
-    //int total_harga = 0;
     // for loop untuk hitung setiap item
     for (ProductsTransactionsModel element in list_produk) {
       // car index untuk produk dengan kode yang sama
       int data_index = original_data_produk.indexWhere(
         (data) => data.kode_barang == element.kode_barang,
       );
-      setState(() {
-        // hitung total harga
-        int harga =
-            element.jumlah_item! *
-            original_data_produk[data_index].harga_barang!;
-        total_keuntungan = total_keuntungan + harga;
-        // total modal
-        int modal =
-            element.jumlah_item! *
-            original_data_produk[data_index].modal_barang!;
-        total_modal = total_modal + modal;
-
-        total_keuntungan_bersih = total_keuntungan - total_modal;
-      });
-
-      print(total_modal.toString());
     }
     TransactionsModel transaksi = TransactionsModel(
       catatan_transaksi: catatan_transaksi.text,
@@ -191,6 +198,7 @@ class _TransactionPageState extends State<TransactionPage> {
     super.initState();
     // fetch data produk
     original_data_produk = widget.dataBaseNotifier.data_produk;
+    data_produk = original_data_produk;
     // membuat controller dummy
     items_controllers = List.generate(
       original_data_produk.length,
