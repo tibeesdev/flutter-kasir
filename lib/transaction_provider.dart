@@ -70,11 +70,19 @@ class DataBaseNotifier extends ChangeNotifier {
     _list_produk.add(produk);
     notifyListeners();
   }
-  
 }
 
 class TimeFilter extends ChangeNotifier {
+  // changenotofier database
+  DataBaseNotifier dataBaseNotifier = DataBaseNotifier();
   int _filter_terpilih = 0;
+  int _total_modal = 0;
+  int _total_keuntungan = 0;
+  int _total_keuntungan_bersih = 0;
+  // getter
+  int get total_modal => _total_modal;
+  int get total_keuntungan => _total_keuntungan;
+  int get total_keuntungan_bersih => _total_keuntungan_bersih;
   int get filter_terpilih => _filter_terpilih;
   List filter_data = [
     'semua',
@@ -90,6 +98,27 @@ class TimeFilter extends ChangeNotifier {
     _filter_terpilih = nilai_baru;
     print('filter $filter_terpilih');
 
+    notifyListeners();
+  }
+
+  // fungsi hitung total transaksi
+  void proccessTransaction() {
+    // local variable
+    int local_modal = 0;
+    int local_harga = 0;
+    int local_keuntungan = 0;
+    // for loop data transaksi
+    List<TransactionsModel> data_transaksi = dataBaseNotifier.data_transaksi;
+    for (var element in data_transaksi) {
+      local_modal = local_modal + element.total_modal!;
+      local_harga = local_harga + element.total_harga!;
+      local_keuntungan = local_harga - local_modal;
+    }
+    // assign ke global variabel
+
+    _total_modal = local_modal;
+    _total_keuntungan = local_harga;
+    _total_keuntungan_bersih = local_keuntungan;
     notifyListeners();
   }
 }

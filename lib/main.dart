@@ -40,9 +40,6 @@ class _MyHomePageState extends State<MyHomePage> {
   TimeFilter timeFilter = TimeFilter();
   // changenotofier database
   DataBaseNotifier dataBaseNotifier = DataBaseNotifier();
-  int total_modal = 50000;
-  int total_keuntungan = 100000;
-  int total_keuntungan_bersih = 0;
 
   // inisiasi database
   DatabaseInstance databaseInstance = DatabaseInstance();
@@ -52,7 +49,6 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     // inisiasi database
     databaseInstance.database();
-
     // load database
     loadDatabase();
     // TODO: implement initState
@@ -63,8 +59,6 @@ class _MyHomePageState extends State<MyHomePage> {
   List<ProductsTransactionsModel> data_produk_transaksi =
       []; //list data produuk transaksi
   bool load_status = true;
-
-
 
   // fetch produk transaksi
   Future fetchProductsTransactions() async {
@@ -104,7 +98,7 @@ class _MyHomePageState extends State<MyHomePage> {
     // lebar dan tinggi layar
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
-    total_keuntungan_bersih = total_keuntungan - total_modal;
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
@@ -150,9 +144,9 @@ class _MyHomePageState extends State<MyHomePage> {
             // kolom data transaksi
             dataTransaksi(
               screenWidth: screenWidth,
-              total_modal: total_modal,
-              total_keuntungan: total_keuntungan,
-              total_keuntungan_bersih: total_keuntungan_bersih,
+              total_modal: timeFilter.total_modal,
+              total_keuntungan: timeFilter.total_keuntungan,
+              total_keuntungan_bersih: timeFilter.total_keuntungan_bersih,
             ),
 
             // header informasi transaksi
@@ -162,6 +156,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ListenableBuilder(
               listenable: dataBaseNotifier,
               builder: (context, child) {
+                //timeFilter.proccessTransaction();
                 return informasiTransaksi(
                   data_transaksi: dataBaseNotifier.data_transaksi,
                 );
@@ -179,7 +174,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       bottomNavigationBar: // tabbar custom
       // container awal
-      cutomTabBar(screenWidth: screenWidth, dataBaseNotifier: dataBaseNotifier,),
+      cutomTabBar(screenWidth: screenWidth, dataBaseNotifier: dataBaseNotifier),
     );
   }
 }
