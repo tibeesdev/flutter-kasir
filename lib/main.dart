@@ -49,10 +49,10 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     // inisiasi database
     databaseInstance.database();
-    //inisiasi data transaksi
-    timeFilter.proccessTransaction();
+
     // load database
     loadDatabase();
+
     // TODO: implement initState
     super.initState();
   }
@@ -77,6 +77,7 @@ class _MyHomePageState extends State<MyHomePage> {
     dataBaseNotifier.fetchTransactions();
     // ambil data produk
     dataBaseNotifier.fetchProducts();
+
     // ambil data transaksi produk
     fetchProductsTransactions();
 
@@ -142,18 +143,13 @@ class _MyHomePageState extends State<MyHomePage> {
           children: <Widget>[
             // kolom pilihan jangka waktu data
             filterJangkaWaktu(timeFilter: timeFilter),
-
             // kolom data transaksi
-            ListenableBuilder(
-              listenable: timeFilter,
-              builder: (context, child) {
-                return dataTransaksi(
-                  screenWidth: screenWidth,
-                  total_modal: timeFilter.total_modal,
-                  total_keuntungan: timeFilter.total_keuntungan,
-                  total_keuntungan_bersih: timeFilter.total_keuntungan_bersih,
-                );
-              },
+            dataTransaksi(
+              screenWidth: screenWidth,
+              // total_modal: timeFilter.total_modal,
+              // total_keuntungan: timeFilter.total_keuntungan,
+              // total_keuntungan_bersih: timeFilter.total_keuntungan_bersih,
+              dataBaseNotifier: dataBaseNotifier,
             ),
 
             // header informasi transaksi
@@ -163,7 +159,8 @@ class _MyHomePageState extends State<MyHomePage> {
             ListenableBuilder(
               listenable: dataBaseNotifier,
               builder: (context, child) {
-                //timeFilter.proccessTransaction();
+                // proses transaksi
+                
                 return informasiTransaksi(
                   data_transaksi: dataBaseNotifier.data_transaksi,
                 );

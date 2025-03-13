@@ -3,6 +3,15 @@ import 'package:kasirapp2/database_handler/database_model.dart';
 import 'database_handler/database_instance.dart';
 
 class DataBaseNotifier extends ChangeNotifier {
+    int _filter_terpilih = 0;
+  int _total_modal = 0;
+  int _total_keuntungan = 0;
+  int _total_keuntungan_bersih = 0;
+  // getter
+  int get total_modal => _total_modal;
+  int get total_keuntungan => _total_keuntungan;
+  int get total_keuntungan_bersih => _total_keuntungan_bersih;
+  int get filter_terpilih => _filter_terpilih;
   // local variabel
   List<ProductsModel> _data_produk = [];
   List<TransactionsModel> _data_transaksi = [];
@@ -29,6 +38,27 @@ class DataBaseNotifier extends ChangeNotifier {
     List<TransactionsModel> transaksi =
         await _databaseInstance.showAllTransactions();
     _data_transaksi = transaksi;
+
+    // proses data transaksi
+    // local variable
+    int local_modal = 0;
+    int local_harga = 0;
+    int local_keuntungan = 0;
+    // for loop data transaksi
+    List<TransactionsModel> data_transaksi = _data_transaksi;
+    print(data_transaksi.length.toString());
+    for (var element in data_transaksi) {
+      local_modal = local_modal + element.total_modal!;
+      local_harga = local_harga + element.total_harga!;
+      local_keuntungan = local_harga - local_modal;
+    }
+    // assign ke global variabel
+
+    _total_modal = local_modal;
+    _total_keuntungan = local_harga;
+    _total_keuntungan_bersih = local_keuntungan;
+    print('total keuntungan ${_total_keuntungan.toString()}');
+
 
     print('berhasil fetch transaksi notifier');
     notifyListeners();
@@ -73,16 +103,11 @@ class DataBaseNotifier extends ChangeNotifier {
 }
 
 class TimeFilter extends ChangeNotifier {
-  // changenotofier database
-  DataBaseNotifier dataBaseNotifier = DataBaseNotifier();
+
   int _filter_terpilih = 0;
-  int _total_modal = 0;
-  int _total_keuntungan = 0;
-  int _total_keuntungan_bersih = 0;
+
   // getter
-  int get total_modal => _total_modal;
-  int get total_keuntungan => _total_keuntungan;
-  int get total_keuntungan_bersih => _total_keuntungan_bersih;
+
   int get filter_terpilih => _filter_terpilih;
   List filter_data = [
     'semua',
@@ -100,24 +125,4 @@ class TimeFilter extends ChangeNotifier {
     notifyListeners();
   }
 
-  // fungsi hitung total transaksi
-  void proccessTransaction() {
-    // local variable
-    int local_modal = 0;
-    int local_harga = 0;
-    int local_keuntungan = 0;
-    // for loop data transaksi
-    List<TransactionsModel> data_transaksi = dataBaseNotifier.data_transaksi;
-    for (var element in data_transaksi) {
-      local_modal = local_modal + element.total_modal!;
-      local_harga = local_harga + element.total_harga!;
-      local_keuntungan = local_harga - local_modal;
-    }
-    // assign ke global variabel
-
-    _total_modal = local_modal;
-    _total_keuntungan = local_harga;
-    _total_keuntungan_bersih = local_keuntungan;
-    notifyListeners();
-  }
 }

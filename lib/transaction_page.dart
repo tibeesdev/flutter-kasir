@@ -163,7 +163,7 @@ class _TransactionPageState extends State<TransactionPage> {
     getRandomFormattedString();
     // refetch database
     widget.dataBaseNotifier.fetchTransactions();
-    widget.timeFilter.proccessTransaction();
+
     print('berhasil input transaksi');
   }
 
