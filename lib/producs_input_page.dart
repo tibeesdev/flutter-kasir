@@ -16,7 +16,7 @@ class InputProductsPage extends StatefulWidget {
 class _InputProductsPageState extends State<InputProductsPage> {
   // inisiasi instance
   DatabaseInstance databaseInstance = DatabaseInstance();
-  
+  TimeFilter timeFilter = TimeFilter();
 
   // status loading database
   bool isLoading = true;
@@ -37,8 +37,6 @@ class _InputProductsPageState extends State<InputProductsPage> {
     // TODO: implement initState
     super.initState();
   }
-
-
 
   // data dummy
   List data = List.generate(10, (index) => index += 1);
@@ -93,6 +91,7 @@ class _InputProductsPageState extends State<InputProductsPage> {
         screenWidth: screenWidth,
         onInsertProduct: loadDatabase,
         dataBaseNotifier: widget.dataBaseNotifier,
+        timeFilter: timeFilter,
       ),
     );
   }
