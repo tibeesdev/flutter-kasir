@@ -49,6 +49,8 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     // inisiasi database
     databaseInstance.database();
+    //inisiasi data transaksi
+    timeFilter.proccessTransaction();
     // load database
     loadDatabase();
     // TODO: implement initState
@@ -142,11 +144,16 @@ class _MyHomePageState extends State<MyHomePage> {
             filterJangkaWaktu(timeFilter: timeFilter),
 
             // kolom data transaksi
-            dataTransaksi(
-              screenWidth: screenWidth,
-              total_modal: timeFilter.total_modal,
-              total_keuntungan: timeFilter.total_keuntungan,
-              total_keuntungan_bersih: timeFilter.total_keuntungan_bersih,
+            ListenableBuilder(
+              listenable: timeFilter,
+              builder: (context, child) {
+                return dataTransaksi(
+                  screenWidth: screenWidth,
+                  total_modal: timeFilter.total_modal,
+                  total_keuntungan: timeFilter.total_keuntungan,
+                  total_keuntungan_bersih: timeFilter.total_keuntungan_bersih,
+                );
+              },
             ),
 
             // header informasi transaksi

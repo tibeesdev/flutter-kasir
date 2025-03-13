@@ -406,11 +406,16 @@ class _informasiTransaksiState extends State<informasiTransaksi> {
 
 // tabbar custom
 class cutomTabBar extends StatefulWidget {
-  cutomTabBar({super.key, required this.screenWidth,
-  required this.dataBaseNotifier});
+  cutomTabBar({
+    super.key,
+    required this.screenWidth,
+    required this.dataBaseNotifier,
+    required this.timeFilter
+  });
 
   final double screenWidth;
   DataBaseNotifier dataBaseNotifier;
+  TimeFilter timeFilter;
 
   @override
   State<cutomTabBar> createState() => _cutomTabBarState();
@@ -445,8 +450,9 @@ class _cutomTabBarState extends State<cutomTabBar> {
                   context,
                   MaterialPageRoute(
                     builder:
-                        (context) =>
-                            InputProductsPage(dataBaseNotifier: widget.dataBaseNotifier),
+                        (context) => InputProductsPage(
+                          dataBaseNotifier: widget.dataBaseNotifier,
+                        ),
                   ),
                 ),
             child: Padding(
@@ -490,7 +496,13 @@ class _cutomTabBarState extends State<cutomTabBar> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => TransactionPage(dataBaseNotifier: widget.dataBaseNotifier,)),
+                    MaterialPageRoute(
+                      builder:
+                          (context) => TransactionPage(
+                            dataBaseNotifier: widget.dataBaseNotifier,
+                            timeFilter: widget.timeFilter,
+                          ),
+                    ),
                   );
                 },
                 shape: CircleBorder(),

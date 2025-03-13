@@ -97,7 +97,6 @@ class TimeFilter extends ChangeNotifier {
   void updateFilter(int nilai_baru) {
     _filter_terpilih = nilai_baru;
     print('filter $filter_terpilih');
-
     notifyListeners();
   }
 

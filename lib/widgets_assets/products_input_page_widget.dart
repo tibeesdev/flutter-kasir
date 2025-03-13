@@ -244,9 +244,11 @@ class cutomTabBar extends StatefulWidget {
     required this.screenWidth,
     required this.onInsertProduct,
     required this.dataBaseNotifier,
+    required this.timeFilter
   });
 
   DataBaseNotifier dataBaseNotifier;
+  TimeFilter timeFilter;
 
   final double screenWidth;
   Future Function() onInsertProduct;
@@ -347,6 +349,7 @@ class _cutomTabBarState extends State<cutomTabBar> {
                     builder:
                         (context) => TransactionPage(
                           dataBaseNotifier: widget.dataBaseNotifier,
+                          timeFilter: widget.timeFilter,
                         ),
                   ),
                 ),

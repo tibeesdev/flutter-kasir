@@ -7,9 +7,14 @@ import 'package:kasirapp2/transaction_provider.dart';
 import 'widgets_assets/transaction_page_widget.dart';
 
 class TransactionPage extends StatefulWidget {
-  TransactionPage({super.key, required this.dataBaseNotifier});
+  TransactionPage({
+    super.key,
+    required this.dataBaseNotifier,
+    required this.timeFilter,
+  });
 
   DataBaseNotifier dataBaseNotifier;
+  TimeFilter timeFilter;
 
   @override
   State<TransactionPage> createState() => _TransactionPageState();
@@ -158,6 +163,7 @@ class _TransactionPageState extends State<TransactionPage> {
     getRandomFormattedString();
     // refetch database
     widget.dataBaseNotifier.fetchTransactions();
+    widget.timeFilter.proccessTransaction();
     print('berhasil input transaksi');
   }
 
