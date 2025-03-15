@@ -3,22 +3,32 @@ import 'package:kasirapp2/database_handler/database_model.dart';
 import 'database_handler/database_instance.dart';
 
 class DataBaseNotifier extends ChangeNotifier {
-    int _filter_terpilih = 0;
+  /////////////////////////////
+  int _filter_terpilih = 0;
   int _total_modal = 0;
   int _total_keuntungan = 0;
   int _total_keuntungan_bersih = 0;
+
   // getter
   int get total_modal => _total_modal;
   int get total_keuntungan => _total_keuntungan;
   int get total_keuntungan_bersih => _total_keuntungan_bersih;
   int get filter_terpilih => _filter_terpilih;
-  // local variabel
-  List<ProductsModel> _data_produk = [];
-  List<TransactionsModel> _data_transaksi = [];
 
   // getter untuk local variabel
   List<ProductsModel> get data_produk => _data_produk;
   List<TransactionsModel> get data_transaksi => _data_transaksi;
+  TransactionsModel get data_transaksi_kode => _kode_data_transaksi;
+  List<ProductsTransactionsModel> get data_produk_kode => _kode_produk_transaksi;
+
+  // local variabel
+  // list data produk dan data transaksi
+  List<ProductsModel> _data_produk = [];
+  List<TransactionsModel> _data_transaksi = [];
+
+  // data transaki dan dan data produk dalam transaksi, diambil berdasarkan kode transaksi
+  TransactionsModel _kode_data_transaksi = TransactionsModel();
+  List<ProductsTransactionsModel> _kode_produk_transaksi = [];
 
   // call databaseinstance
   DatabaseInstance _databaseInstance = DatabaseInstance();
@@ -57,10 +67,21 @@ class DataBaseNotifier extends ChangeNotifier {
     _total_modal = local_modal;
     _total_keuntungan = local_harga;
     _total_keuntungan_bersih = local_keuntungan;
-    print('total keuntungan ${_total_keuntungan.toString()}');
-
-
     print('berhasil fetch transaksi notifier');
+    notifyListeners();
+  }
+
+  // fetch transaksi dan produuk berdasarkan kode transaksi
+  Future fetchTransactionProducts(String kode_transaksi) async {
+    TransactionsModel transaksi = await _databaseInstance
+        .showTransactionsByKode(kode_transaksi);
+    _kode_data_transaksi = transaksi;
+
+    List<ProductsTransactionsModel> produk = await _databaseInstance
+        .showProductsTransactionsByKode(kode_transaksi);
+    _kode_produk_transaksi = produk;
+
+    print('berhasil fetch transaksi dan barang transaksi');
     notifyListeners();
   }
 
@@ -81,6 +102,9 @@ class DataBaseNotifier extends ChangeNotifier {
         'jumlah_item': element.jumlah_item.toString(),
         'kode_barang': element.kode_barang.toString(),
         'kode_transaksi': element.kode_transaksi.toString(),
+        'harga_barang': element.harga_barang.toString(),
+        'modal_barang': element.modal_barang.toString(),
+        'nama_barang': element.nama_barang.toString(),
       });
     }
   }
@@ -89,6 +113,13 @@ class DataBaseNotifier extends ChangeNotifier {
   // hapus produk berdasarkan kode
   Future deleteProduk(String kode_produk) async {
     int kode = await _databaseInstance.deleteProduct(kode_produk);
+    print('status hapus produk : $kode');
+    notifyListeners();
+  }
+
+  // hapus transaksi
+  Future deleteTransaksi(String kode_transaksi) async {
+    List<int> kode = await _databaseInstance.deleteTransaction(kode_transaksi);
     print('status hapus produk : $kode');
     notifyListeners();
   }
@@ -103,7 +134,6 @@ class DataBaseNotifier extends ChangeNotifier {
 }
 
 class TimeFilter extends ChangeNotifier {
-
   int _filter_terpilih = 0;
 
   // getter
@@ -124,5 +154,4 @@ class TimeFilter extends ChangeNotifier {
     print('filter $filter_terpilih');
     notifyListeners();
   }
-
 }

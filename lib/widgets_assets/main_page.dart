@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:kasirapp2/database_handler/database_instance.dart';
 import 'package:kasirapp2/database_handler/database_model.dart';
+import 'package:kasirapp2/invoice_page.dart';
 import 'package:kasirapp2/transaction_page.dart';
 import 'package:kasirapp2/producs_input_page.dart';
 import 'package:kasirapp2/transaction_provider.dart';
@@ -302,9 +303,14 @@ class headerDataTransaksi extends StatelessWidget {
 
 // informasi transaksi lengkap (buat sistem onclicknya)
 class informasiTransaksi extends StatefulWidget {
-  informasiTransaksi({super.key, required this.data_transaksi});
+  informasiTransaksi({
+    super.key,
+    required this.data_transaksi,
+    required this.dataBaseNotifier,
+  });
   // list berisi data transaksi
   List<TransactionsModel> data_transaksi = [];
+  DataBaseNotifier dataBaseNotifier;
 
   @override
   State<informasiTransaksi> createState() => _informasiTransaksiState();
@@ -316,7 +322,7 @@ class _informasiTransaksiState extends State<informasiTransaksi> {
   @override
   Widget build(BuildContext context) {
     return widget.data_transaksi.length == 0
-        ? Container(child: Text('belum ada transkasi yang dibuat'))
+        ? Center(child: Text('belum ada transkasi yang dibuat'))
         : Flexible(
           child: ListView.builder(
             itemCount: widget.data_transaksi.length,
@@ -328,14 +334,63 @@ class _informasiTransaksiState extends State<informasiTransaksi> {
               return GestureDetector(
                 // ketika disentuh maka akan memanggil data yang sesuai
                 onTap: () async {
-                  final String? kode_transaksi_tap =
-                      widget.data_transaksi[index].kode_transaksi;
+                  final String kode_transaksi_tap =
+                      widget.data_transaksi[index].kode_transaksi!;
                   print(kode_transaksi_tap);
                   TransactionsModel data = await databaseInstance
-                      .showTransactionsByKode(kode_transaksi_tap!);
+                      .showTransactionsByKode(kode_transaksi_tap);
                   print(data.catatan_transaksi);
 
                   // page informasi transaksi
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder:
+                          (context) =>
+                              InvoicePage(kode_transaksi: kode_transaksi_tap, dataBaseNotifier: widget.dataBaseNotifier,),
+                    ),
+                  );
+                },
+
+                // hapus transaksi
+                onLongPress: () {
+                  final String kode_transaksi_tap =
+                      widget.data_transaksi[index].kode_transaksi!;
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      // alertdialog konfirmasi hapus barang
+                      return AlertDialog(
+                        content: Text(
+                          'hapus transaksi : $kode_transaksi_tap ?',
+                        ),
+                        actions: [
+                          // batalkan
+                          ElevatedButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: Text('batalkan'),
+                          ),
+
+                          // konfirmasi hapus
+                          ElevatedButton(
+                            onPressed: () {
+                              // hapus produk
+                              widget.dataBaseNotifier.deleteTransaksi(
+                                kode_transaksi_tap,
+                              );
+                              // fetch ulang data
+                              widget.dataBaseNotifier.fetchTransactions();
+                              // tutup jendela
+                              Navigator.pop(context);
+                            },
+                            child: Text('hapus'),
+                          ),
+                        ],
+                      );
+                    },
+                  );
                 },
                 child: Container(
                   margin: EdgeInsets.all(5),

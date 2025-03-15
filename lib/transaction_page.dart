@@ -110,8 +110,11 @@ class _TransactionPageState extends State<TransactionPage> {
       // modal dan harga barang
       int element_modal = original_data_produk[index].modal_barang!;
       int element_harga = original_data_produk[index].harga_barang!;
+      // harga, modal, dan nama barang per item
+      String element_nama = original_data_produk[index].nama_barang!;
       // jumlah item produk yang dibeli
       int jumlah_item = element.jumlah_item!;
+      // modal dan harga
       local_modal = element_modal * jumlah_item + local_modal;
       local_harga = element_harga * jumlah_item + local_harga;
       local_keuntungan = local_harga - local_modal;
@@ -294,17 +297,13 @@ class _TransactionPageState extends State<TransactionPage> {
               kode_transaksi: kode_transaksi,
             ),
 
-            // debug
-            // Text(items_controllers[0].text.toString()),
-            // Text(cari_barang.text.toString()),
-            // Text(_selectedDate.toString()),
+
             cutomTabBar(
               screenWidth: screenWidth,
               dataBaseNotifier: widget.dataBaseNotifier,
               addTransaction: addTransaction,
             ),
 
-            Text(list_produk.toString()),
           ],
         ),
       ),

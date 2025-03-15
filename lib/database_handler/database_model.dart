@@ -55,13 +55,14 @@ class TransactionsModel {
 // model untuk produk
 class ProductsTransactionsModel {
   int? id, jumlah_item;
-  String? kode_barang, kode_transaksi;
+  String? kode_barang, kode_transaksi, harga_barang,modal_barang, nama_barang;
 
   ProductsTransactionsModel({
     this.id,
     this.jumlah_item,
     this.kode_barang,
     this.kode_transaksi,
+    this.harga_barang, this.modal_barang, this.nama_barang
   });
 
   // factory
@@ -71,6 +72,9 @@ class ProductsTransactionsModel {
       jumlah_item: json['jumlah_item'],
       kode_barang: json['kode_barang'],
       kode_transaksi: json['kode_transaksi'],
+      harga_barang: json['harga_barang'],
+      modal_barang: json['modal_barang'],
+      nama_barang: json['nama_barang'],
     );
   }
 }

@@ -160,9 +160,9 @@ class _MyHomePageState extends State<MyHomePage> {
               listenable: dataBaseNotifier,
               builder: (context, child) {
                 // proses transaksi
-                
                 return informasiTransaksi(
                   data_transaksi: dataBaseNotifier.data_transaksi,
+                  dataBaseNotifier: dataBaseNotifier,
                 );
               },
             ),

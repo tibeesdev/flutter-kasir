@@ -85,7 +85,10 @@ class DatabaseInstance {
     $transaksi_produk_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
     $transaksi_produk_kode_transaksi TEXT NOT NULL,
     $transaksi_produk_kode_barang TEXT NOT NULL,
-    $transaksi_produk_jumlah_item INTEGER NOT NULL)
+    $transaksi_produk_jumlah_item INTEGER NOT NULL,
+    $produk_nama TEXT NOT NULL,
+    $produk_modal INTEGER NOT NULL,
+    $produk_harga INTEGER NOT NULL)
     ''');
 
     print('tabel transaksi produk berhasil dibuat');
@@ -172,18 +175,18 @@ class DatabaseInstance {
 
   // transaksi produk
   // kode produk
-  Future showProductsTransactionsByKode(String kode_produk_transaksi) async {
+  Future<List<ProductsTransactionsModel>> showProductsTransactionsByKode(String kode_produk_transaksi) async {
     final db = await database();
     final query = await db.query(
-      tabel_transaksi,
-      where: '$transaksi_produk_kode_barang = ?',
+      tabel_produk_transaksi,
+      where: '$transaksi_produk_kode_transaksi = ?',
       whereArgs: [kode_produk_transaksi],
     );
     var res =
         query
             .toList()
             .map((e) => ProductsTransactionsModel.fromJson(e))
-            .toList()[0];
+            .toList();
     return res;
   }
 
@@ -202,9 +205,31 @@ class DatabaseInstance {
 
   // hapus data
   // hapus produk berdasarkana kode
-  Future<int> deleteProduct(String kode_barang)async{
+  Future<int> deleteProduct(String kode_barang) async {
     final db = await database();
-    final query = await db.delete(tabel_produk, where: '$produk_kode = ?', whereArgs: [kode_barang]);
+    final query = await db.delete(
+      tabel_produk,
+      where: '$produk_kode = ?',
+      whereArgs: [kode_barang],
+    );
     return query;
+  }
+
+  // hapus transaksi berdasarkan kode
+  // hapus produk berdasarkana kode
+  Future <List<int>> deleteTransaction(String kode_transaksi) async {
+    final db = await database();
+    final query = await db.delete(
+      tabel_transaksi,
+      where: '$transaksi_kode = ?',
+      whereArgs: [kode_transaksi],
+    );
+    final query2 = await db.delete(
+      tabel_produk_transaksi,
+      where: '$transaksi_produk_kode_transaksi = ?',
+      whereArgs: [kode_transaksi],
+    );
+
+    return [query, query2];
   }
 }
