@@ -146,9 +146,6 @@ class _MyHomePageState extends State<MyHomePage> {
             // kolom data transaksi
             dataTransaksi(
               screenWidth: screenWidth,
-              // total_modal: timeFilter.total_modal,
-              // total_keuntungan: timeFilter.total_keuntungan,
-              // total_keuntungan_bersih: timeFilter.total_keuntungan_bersih,
               dataBaseNotifier: dataBaseNotifier,
             ),
 
