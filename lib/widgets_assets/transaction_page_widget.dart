@@ -160,27 +160,27 @@ class dataTransaksi extends StatelessWidget {
   }
 }
 
-// widget untuk bagian catatan transaski, tanggal transaksi, dan cari barang
+// widget untuk bagian pelanggan transaski, tanggal transaksi, dan cari barang
 
 class DetailTransaksi extends StatefulWidget {
   DetailTransaksi({
     super.key,
     required this.screenWidth,
-    required this.catatan_transaksi,
+    required this.pelanggan_transaksi,
     required this.cari_barang,
     required this.onUpdateCariBarang,
-    required this.onUpdateCatatanTransaksi,
+    required this.onUpdatepelangganTransaksi,
     required this.onUpdateSelectDate,
   });
   // controller
-  TextEditingController catatan_transaksi;
+  TextEditingController pelanggan_transaksi;
   TextEditingController cari_barang;
 
   // lebar layar
   double screenWidth;
 
   // fungsi call back untuk ambil data
-  final Function(String) onUpdateCatatanTransaksi;
+  final Function(String) onUpdatepelangganTransaksi;
   final Function(String) onUpdateCariBarang;
   final Function(DateTime) onUpdateSelectDate;
 
@@ -224,7 +224,7 @@ class _DetailTransaksiState extends State<DetailTransaksi> {
       child: Column(
         children: [
           // bagian atas
-          // catatan transaksi
+          // pelanggan transaksi
           Padding(
             padding: EdgeInsets.all(1),
             child: Container(
@@ -236,13 +236,13 @@ class _DetailTransaksiState extends State<DetailTransaksi> {
                 maxHeight: 80,
                 maxWidth: widget.screenWidth - 20,
               ),
-              // texformfielc catatan transaksi
+              // texformfielc pelanggan transaksi
               child: TextFormField(
-                controller: widget.catatan_transaksi,
+                controller: widget.pelanggan_transaksi,
                 onChanged: (value) {
-                  widget.onUpdateCatatanTransaksi(value);
+                  widget.onUpdatepelangganTransaksi(value);
                   setState(() {
-                    widget.catatan_transaksi.text = value.toString();
+                    widget.pelanggan_transaksi.text = value.toString();
                   });
                 },
                 decoration: InputDecoration(
@@ -256,7 +256,7 @@ class _DetailTransaksiState extends State<DetailTransaksi> {
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(20),
                   ),
-                  labelText: 'catatan transaksi',
+                  labelText: 'pelanggan transaksi',
                   prefixIcon: Icon(Icons.edit_note_outlined),
                   filled: true,
                   fillColor: Colors.white,

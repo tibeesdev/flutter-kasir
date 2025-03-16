@@ -126,7 +126,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 'total_modal': 25000,
                 'total_harga': 50000,
                 'total_keuntungan': 25000,
-                'catatan_transaksi': 'test transaksi',
+                'pelanggan_transaksi': 'test transaksi',
                 'kode_transaksi': 'kode 1',
               });
               print(kode.toString());
@@ -155,7 +155,7 @@ class _MyHomePageState extends State<MyHomePage> {
             // header informasi transaksi
             headerDataTransaksi(screenWidth: screenWidth),
 
-            // informasi transaksi berisi catatan, id transaksi, pengeluaran dan pemasukan
+            // informasi transaksi berisi pelanggan, id transaksi, pengeluaran dan pemasukan
             ListenableBuilder(
               listenable: dataBaseNotifier,
               builder: (context, child) {

@@ -26,7 +26,7 @@ class DatabaseInstance {
   // kolom transaksi
   final String transaksi_id = 'id';
   final String transaksi_kode = 'kode_transaksi';
-  final String transaksi_catatan = 'catatan_transaksi';
+  final String transaksi_pelanggan = 'pelanggan_transaksi';
   final String transaksi_total_modal = 'total_modal';
   final String transaksi_total_harga = 'total_harga';
   final String transaksi_total_keuntungan = 'total_keuntungan';
@@ -73,7 +73,7 @@ class DatabaseInstance {
     await db.execute('''CREATE TABLE $tabel_transaksi (
     $transaksi_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
     $transaksi_kode TEXT NOT NULL UNIQUE,
-    $transaksi_catatan TEXT NOT NULL,
+    $transaksi_pelanggan TEXT NOT NULL,
     $transaksi_total_modal INTEGER NOT NULL,
     $transaksi_total_harga INTEGER NOT NULL,
     $transaksi_total_keuntungan INTEGER NOT NULL)''');
@@ -175,7 +175,9 @@ class DatabaseInstance {
 
   // transaksi produk
   // kode produk
-  Future<List<ProductsTransactionsModel>> showProductsTransactionsByKode(String kode_produk_transaksi) async {
+  Future<List<ProductsTransactionsModel>> showProductsTransactionsByKode(
+    String kode_produk_transaksi,
+  ) async {
     final db = await database();
     final query = await db.query(
       tabel_produk_transaksi,
@@ -217,7 +219,7 @@ class DatabaseInstance {
 
   // hapus transaksi berdasarkan kode
   // hapus produk berdasarkana kode
-  Future <List<int>> deleteTransaction(String kode_transaksi) async {
+  Future<List<int>> deleteTransaction(String kode_transaksi) async {
     final db = await database();
     final query = await db.delete(
       tabel_transaksi,

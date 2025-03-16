@@ -30,7 +30,7 @@ class _TransactionPageState extends State<TransactionPage> {
   // inisiasi tanggal awal
   DateTime? _selectedDate = DateTime.now();
   // controller
-  TextEditingController catatan_transaksi = TextEditingController();
+  TextEditingController pelanggan_transaksi = TextEditingController();
   TextEditingController cari_barang = TextEditingController();
   List<TextEditingController> items_controllers =
       []; // controller untuk list barang
@@ -50,10 +50,10 @@ class _TransactionPageState extends State<TransactionPage> {
     });
   }
 
-  //callback catatan transaksi
-  void onUpdateCatatanTransaksi(String nilai_catatan_transaksi) {
+  //callback pelanggan transaksi
+  void onUpdatepelangganTransaksi(String nilai_pelanggan_transaksi) {
     setState(() {
-      catatan_transaksi.text = nilai_catatan_transaksi;
+      pelanggan_transaksi.text = nilai_pelanggan_transaksi;
     });
   }
 
@@ -145,7 +145,7 @@ class _TransactionPageState extends State<TransactionPage> {
       );
     }
     TransactionsModel transaksi = TransactionsModel(
-      catatan_transaksi: catatan_transaksi.text,
+      pelanggan_transaksi: pelanggan_transaksi.text,
       kode_transaksi: kode_transaksi,
       total_harga: total_harga,
       total_keuntungan:
@@ -159,7 +159,7 @@ class _TransactionPageState extends State<TransactionPage> {
       'total_modal': transaksi.total_modal,
       'total_harga': transaksi.total_harga,
       'total_keuntungan': transaksi.total_keuntungan,
-      'catatan_transaksi': transaksi.catatan_transaksi,
+      'pelanggan_transaksi': transaksi.pelanggan_transaksi,
       'kode_transaksi': transaksi.kode_transaksi,
     });
     // refresh kode transaksi
@@ -223,7 +223,7 @@ class _TransactionPageState extends State<TransactionPage> {
     for (var controller in items_controllers) {
       controller.dispose();
     }
-    catatan_transaksi.dispose();
+    pelanggan_transaksi.dispose();
     cari_barang.dispose();
     super.dispose();
   }
@@ -275,15 +275,15 @@ class _TransactionPageState extends State<TransactionPage> {
               ),
             ),
 
-            // card input catatan, kode, dan tanggal transaksi
+            // card input pelanggan, kode, dan tanggal transaksi
             Padding(
               padding: EdgeInsets.all(5),
               child: DetailTransaksi(
                 screenWidth: screenWidth,
-                catatan_transaksi: catatan_transaksi,
+                pelanggan_transaksi: pelanggan_transaksi,
                 cari_barang: cari_barang,
                 onUpdateCariBarang: onUpdateCariBarang,
-                onUpdateCatatanTransaksi: onUpdateCatatanTransaksi,
+                onUpdatepelangganTransaksi: onUpdatepelangganTransaksi,
                 onUpdateSelectDate: onUpdateSelectDate,
               ),
             ),
@@ -297,13 +297,11 @@ class _TransactionPageState extends State<TransactionPage> {
               kode_transaksi: kode_transaksi,
             ),
 
-
             cutomTabBar(
               screenWidth: screenWidth,
               dataBaseNotifier: widget.dataBaseNotifier,
               addTransaction: addTransaction,
             ),
-
           ],
         ),
       ),

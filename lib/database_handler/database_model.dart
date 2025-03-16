@@ -28,14 +28,14 @@ class ProductsModel {
 // model untuk transaksi
 class TransactionsModel {
   int? id, total_modal, total_harga, total_keuntungan;
-  String? catatan_transaksi, kode_transaksi;
+  String? pelanggan_transaksi, kode_transaksi;
 
   TransactionsModel({
     this.id,
     this.total_modal,
     this.total_harga,
     this.total_keuntungan,
-    this.catatan_transaksi,
+    this.pelanggan_transaksi,
     this.kode_transaksi,
   });
 
@@ -46,7 +46,7 @@ class TransactionsModel {
       total_modal: json['total_modal'],
       total_harga: json['total_harga'],
       total_keuntungan: json['total_keuntungan'],
-      catatan_transaksi: json['catatan_transaksi'],
+      pelanggan_transaksi: json['pelanggan_transaksi'],
       kode_transaksi: json['kode_transaksi'],
     );
   }
@@ -55,14 +55,16 @@ class TransactionsModel {
 // model untuk produk
 class ProductsTransactionsModel {
   int? id, jumlah_item;
-  String? kode_barang, kode_transaksi, harga_barang,modal_barang, nama_barang;
+  String? kode_barang, kode_transaksi, harga_barang, modal_barang, nama_barang;
 
   ProductsTransactionsModel({
     this.id,
     this.jumlah_item,
     this.kode_barang,
     this.kode_transaksi,
-    this.harga_barang, this.modal_barang, this.nama_barang
+    this.harga_barang,
+    this.modal_barang,
+    this.nama_barang,
   });
 
   // factory

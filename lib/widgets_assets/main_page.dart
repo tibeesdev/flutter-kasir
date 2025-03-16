@@ -243,7 +243,7 @@ class dataTransaksi extends StatelessWidget {
   }
 }
 
-// header untuk data transaksi berisi teks catatan, pengeluaran dan pemasukan
+// header untuk data transaksi berisi teks pelanggan, pengeluaran dan pemasukan
 class headerDataTransaksi extends StatelessWidget {
   const headerDataTransaksi({super.key, required this.screenWidth});
 
@@ -272,7 +272,7 @@ class headerDataTransaksi extends StatelessWidget {
             flex: 40,
             child: Center(
               child: Text(
-                'catatan',
+                'pelanggan',
                 style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
               ),
             ),
@@ -339,15 +339,17 @@ class _informasiTransaksiState extends State<informasiTransaksi> {
                   print(kode_transaksi_tap);
                   TransactionsModel data = await databaseInstance
                       .showTransactionsByKode(kode_transaksi_tap);
-                  print(data.catatan_transaksi);
+                  print(data.pelanggan_transaksi);
 
                   // page informasi transaksi
                   Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder:
-                          (context) =>
-                              InvoicePage(kode_transaksi: kode_transaksi_tap, dataBaseNotifier: widget.dataBaseNotifier,),
+                          (context) => InvoicePage(
+                            kode_transaksi: kode_transaksi_tap,
+                            dataBaseNotifier: widget.dataBaseNotifier,
+                          ),
                     ),
                   );
                 },
@@ -415,7 +417,7 @@ class _informasiTransaksiState extends State<informasiTransaksi> {
                             Container(
                               padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
                               child: Text(
-                                data_transaksi.catatan_transaksi.toString(),
+                                data_transaksi.pelanggan_transaksi.toString(),
                                 style: TextStyle(
                                   fontSize: 15,
                                   fontWeight: FontWeight.w500,

@@ -5,7 +5,7 @@ import 'package:kasirapp2/main.dart';
 import 'package:kasirapp2/transaction_page.dart';
 import 'package:kasirapp2/transaction_provider.dart';
 
-// header untuk data produk berisi teks catatan, pengeluaran dan pemasukan
+// header untuk data produk berisi teks pelanggan, pengeluaran dan pemasukan
 class headerDataProduk extends StatelessWidget {
   const headerDataProduk({super.key, required this.screenWidth});
 
@@ -244,7 +244,7 @@ class cutomTabBar extends StatefulWidget {
     required this.screenWidth,
     required this.onInsertProduct,
     required this.dataBaseNotifier,
-    required this.timeFilter
+    required this.timeFilter,
   });
 
   DataBaseNotifier dataBaseNotifier;
