@@ -138,6 +138,20 @@ class _ListBarangState extends State<ListBarang> {
                     },
                   );
                 },
+
+                // edit dialog
+                onTap: () {
+                  String kode_barang = produk.kode_barang!;
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return EditBarangDialog(
+                        dataBaseNotifier: widget.dataBaseNotifier,
+                        kode_barang: kode_barang,
+                      );
+                    },
+                  );
+                },
                 child: Container(
                   margin: EdgeInsets.all(1),
                   constraints: BoxConstraints(maxHeight: 70, minHeight: 50),
@@ -566,6 +580,236 @@ class _TambahBarangDialogState extends State<TambahBarangDialog> {
             DatabaseInstance databaseInstance = DatabaseInstance();
             // masukkan data baru ke dalam database
             await databaseInstance.insertProducts({
+              'harga_barang': int.tryParse(harga_barang_controller.text),
+              'modal_barang': int.tryParse(modal_barang_controller.text),
+              'stok_barang': int.tryParse(stok_barang_controller.text),
+              'nama_barang': nama_barang_controller.text,
+              'kode_barang': kode_barang_controller.text,
+            });
+            // fetch ulang data
+            await widget.dataBaseNotifier.fetchProducts();
+            //tutup jendela
+            Navigator.pop(context);
+          },
+          child: Text('simpan'),
+        ),
+      ],
+    );
+  }
+}
+
+// edit barang
+// untuk tambah barang
+class EditBarangDialog extends StatefulWidget {
+  EditBarangDialog({
+    super.key,
+    required this.dataBaseNotifier,
+    required this.kode_barang,
+  });
+  DataBaseNotifier dataBaseNotifier;
+  String kode_barang;
+
+  @override
+  State<EditBarangDialog> createState() => _EditBarangDialogState();
+}
+
+class _EditBarangDialogState extends State<EditBarangDialog> {
+  // controller
+  TextEditingController kode_barang_controller = TextEditingController();
+  TextEditingController nama_barang_controller = TextEditingController();
+  TextEditingController modal_barang_controller = TextEditingController();
+  TextEditingController harga_barang_controller = TextEditingController();
+  TextEditingController stok_barang_controller = TextEditingController();
+
+  // data barang
+  ProductsModel produk = ProductsModel();
+
+  // inisiasi data barang
+  @override
+  void initState() {
+    // inisiasi data
+    produk =
+        widget.dataBaseNotifier.data_produk
+            .where((x) => x.kode_barang == widget.kode_barang)
+            .first;
+    // inisiasi text di controller
+    kode_barang_controller.text = produk.kode_barang!;
+    nama_barang_controller.text = produk.nama_barang!;
+    modal_barang_controller.text = produk.modal_barang.toString();
+    harga_barang_controller.text = produk.harga_barang.toString();
+    stok_barang_controller.text = produk.stok_barang.toString();
+
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // buat variabel agar lebih mudak diakses
+    List<ProductsModel> data_produk = widget.dataBaseNotifier.data_produk;
+
+    return AlertDialog(
+      actionsAlignment: MainAxisAlignment.center,
+      alignment: Alignment.center,
+      icon: Icon(Icons.bar_chart_outlined),
+      scrollable: true,
+      actionsOverflowAlignment: OverflowBarAlignment.center,
+      actionsOverflowButtonSpacing: 5,
+      actionsOverflowDirection: VerticalDirection.down,
+      title: Text('Edit Informasi Barang'),
+
+      // formfield
+      content: Column(
+        children: [
+          // kode barang
+          Container(
+            margin: EdgeInsets.all(5),
+            child: TextFormField(
+              autovalidateMode: AutovalidateMode.always,
+              validator: (value) {
+                // cek jika kode sudah digunakan
+                bool exists = data_produk.any(
+                  (list) => list.kode_barang == value,
+                );
+                if (value!.isEmpty) {
+                  return 'data tidak boleh kosong';
+                } // cek jika key sudah ada di dalam database
+                else if (exists && value != produk.kode_barang) {
+                  return 'kode barang sudah dipakai';
+                }
+              },
+              controller: kode_barang_controller,
+              onChanged: (value) {
+                setState(() {
+                  kode_barang_controller.text = value;
+                });
+              },
+              canRequestFocus: true,
+              decoration: InputDecoration(
+                labelText: 'kode barang',
+                border: OutlineInputBorder(),
+              ),
+            ),
+          ),
+          // nama barang
+          Container(
+            margin: EdgeInsets.all(5),
+            child: TextFormField(
+              autovalidateMode: AutovalidateMode.always,
+              validator: (value) {
+                if (value!.isEmpty) {
+                  return 'data tidak boleh kosong';
+                }
+              },
+              controller: nama_barang_controller,
+              onChanged: (value) {
+                setState(() {
+                  nama_barang_controller.text = value;
+                });
+              },
+              canRequestFocus: true,
+              decoration: InputDecoration(
+                labelText: 'nama barang',
+                border: OutlineInputBorder(),
+              ),
+            ),
+          ),
+
+          // modal barang
+          Container(
+            margin: EdgeInsets.all(5),
+            child: TextFormField(
+              keyboardType: TextInputType.numberWithOptions(),
+              autovalidateMode: AutovalidateMode.always,
+              validator: (value) {
+                if (value!.isEmpty) {
+                  return 'data tidak boleh kosong';
+                } else if (int.tryParse(value) == null) {
+                  return 'data harus dalam angka';
+                }
+              },
+              controller: modal_barang_controller,
+              onChanged: (value) {
+                setState(() {
+                  modal_barang_controller.text = value;
+                });
+              },
+              canRequestFocus: true,
+              decoration: InputDecoration(
+                labelText: 'modal',
+                border: OutlineInputBorder(),
+              ),
+            ),
+          ),
+
+          // harga barang
+          Container(
+            margin: EdgeInsets.all(5),
+            child: TextFormField(
+              keyboardType: TextInputType.numberWithOptions(),
+              autovalidateMode: AutovalidateMode.always,
+              validator: (value) {
+                if (value!.isEmpty) {
+                  return 'data tidak boleh kosong';
+                } else if (int.tryParse(value) == null) {
+                  return 'data harus dalam angka';
+                }
+              },
+              controller: harga_barang_controller,
+              onChanged: (value) {
+                setState(() {
+                  harga_barang_controller.text = value;
+                });
+              },
+              canRequestFocus: true,
+              decoration: InputDecoration(
+                labelText: 'harga',
+                border: OutlineInputBorder(),
+              ),
+            ),
+          ),
+
+          // stok barang
+          Container(
+            margin: EdgeInsets.all(5),
+            child: TextFormField(
+              keyboardType: TextInputType.numberWithOptions(),
+              autovalidateMode: AutovalidateMode.always,
+              validator: (value) {
+                if (value!.isEmpty) {
+                  return 'data tidak boleh kosong';
+                } else if (int.tryParse(value) == null) {
+                  return 'data harus dalam angka';
+                }
+              },
+              controller: stok_barang_controller,
+              onChanged: (value) {
+                setState(() {
+                  stok_barang_controller.text = value;
+                });
+              },
+              canRequestFocus: true,
+              decoration: InputDecoration(
+                labelText: 'stok',
+                border: OutlineInputBorder(),
+              ),
+            ),
+          ),
+        ],
+      ),
+      actions: [
+        ElevatedButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          child: Text('batalkan'),
+        ),
+        ElevatedButton(
+          onPressed: () async {
+            // inisiasi database
+            DatabaseInstance databaseInstance = DatabaseInstance();
+            // masukkan data baru ke dalam database
+            await databaseInstance.updateProduct({
               'harga_barang': int.tryParse(harga_barang_controller.text),
               'modal_barang': int.tryParse(modal_barang_controller.text),
               'stok_barang': int.tryParse(stok_barang_controller.text),

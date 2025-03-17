@@ -205,6 +205,19 @@ class DatabaseInstance {
     return query;
   }
 
+  // update transaksi
+  Future<int> updateProduct(Map<String, dynamic> row) async {
+    final db = await database();
+    final query = await db.update(
+      tabel_produk,
+      row,
+      where: '$produk_kode = ?',
+      whereArgs: [row[produk_kode]],
+    );
+    return query;
+  }
+
+
   // hapus data
   // hapus produk berdasarkana kode
   Future<int> deleteProduct(String kode_barang) async {
