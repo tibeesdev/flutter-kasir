@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kasirapp2/database_handler/database_model.dart';
 import 'package:kasirapp2/transaction_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
@@ -25,18 +26,32 @@ class InvoicePage extends StatefulWidget {
 
 class _InvoicePageState extends State<InvoicePage> {
   String pdfPath = '';
+
+  //TransactionsModel data_transaksi = dataBaseNotifier.data_transaksi_kode;
+  List<ProductsTransactionsModel> data_produk = [ProductsTransactionsModel()];
+  TransactionsModel data_transaksi = TransactionsModel();
+
   @override
   void initState() {
     // inisiasi data transaksi
     widget.dataBaseNotifier.fetchTransactionProducts(widget.kode_transaksi);
+    // ambil semua data yang diperlukan untuk membuat invoice
+    data_transaksi =
+        widget.dataBaseNotifier.data_transaksi_kode; // data transaksi
+    data_produk = widget.dataBaseNotifier.data_produk_kode; // data produk
+
     super.initState();
+    // Generate PDF automatically on page load
+
+    _generatePdf();
   }
 
   // buat pdf
-  void _generatePdf() async {
+  Future<void> _generatePdf() async {
+    print('pdf sedang dibuat');
     final pdf = pw.Document();
     var data = {
-      'invoice_no': 'INV-001',
+      'invoice_no': '{data_transaksi.kode_transaksi}',
       'date': '2023-10-01',
       'items': [
         {'name': 'Item 1', 'quantity': 2, 'unit_price': 10.0, 'total': 20.0},
@@ -133,6 +148,19 @@ class _InvoicePageState extends State<InvoicePage> {
     });
   }
 
+  //release resource
+  @override
+  void dispose() {
+    // hapus file pdf sementara jika ada
+    if (pdfPath.isNotEmpty) {
+      final file = File(pdfPath);
+      if (file.existsSync()) {
+        file.deleteSync();
+      }
+    }
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -147,13 +175,17 @@ class _InvoicePageState extends State<InvoicePage> {
         actions: [
           IconButton(
             icon: Icon(Icons.upload),
-            onPressed: _generatePdf, // Trigger PDF generation
+            onPressed: () {
+              // This button can be removed since PDF is generated automatically
+            }, // Trigger PDF generation
+            onLongPress: _generatePdf,
           ),
         ],
       ),
       body: ListenableBuilder(
         listenable: widget.dataBaseNotifier,
         builder: (context, child) {
+          print('${pdfPath}');
           return Container(
             constraints: BoxConstraints(
               minWidth: 0, // Ensure minimum width is not negative
@@ -161,6 +193,7 @@ class _InvoicePageState extends State<InvoicePage> {
             ),
             child: Column(
               children: [
+                //debug
                 Text(
                   widget
                       .dataBaseNotifier
@@ -168,7 +201,11 @@ class _InvoicePageState extends State<InvoicePage> {
                       .pelanggan_transaksi
                       .toString(),
                 ),
-                Container(height: 200, child: PDFView(filePath: pdfPath)),
+
+                if (pdfPath.isNotEmpty)
+                  Container(height: 700, child: PDFView(filePath: pdfPath)),
+
+                //Container(height: 700, child: PDFView(filePath: pdfPath)),
               ],
             ),
           );

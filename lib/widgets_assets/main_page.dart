@@ -319,6 +319,7 @@ class informasiTransaksi extends StatefulWidget {
 class _informasiTransaksiState extends State<informasiTransaksi> {
   // inisiasi database
   DatabaseInstance databaseInstance = DatabaseInstance();
+  
   @override
   Widget build(BuildContext context) {
     return widget.data_transaksi.length == 0
@@ -349,6 +350,7 @@ class _informasiTransaksiState extends State<informasiTransaksi> {
                           (context) => InvoicePage(
                             kode_transaksi: kode_transaksi_tap,
                             dataBaseNotifier: widget.dataBaseNotifier,
+                            
                           ),
                     ),
                   );

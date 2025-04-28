@@ -26,6 +26,7 @@ class DataBaseNotifier extends ChangeNotifier {
   List<ProductsModel> _data_produk = [];
   List<TransactionsModel> _data_transaksi = [];
 
+  // list berisi data informasi transaksi dan produknya
   // data transaki dan dan data produk dalam transaksi, diambil berdasarkan kode transaksi
   TransactionsModel _kode_data_transaksi = TransactionsModel();
   List<ProductsTransactionsModel> _kode_produk_transaksi = [];
@@ -72,6 +73,7 @@ class DataBaseNotifier extends ChangeNotifier {
   }
 
   // fetch transaksi dan produuk berdasarkan kode transaksi
+  // ditampilkan untuk dibuat invoice
   Future fetchTransactionProducts(String kode_transaksi) async {
     TransactionsModel transaksi = await _databaseInstance
         .showTransactionsByKode(kode_transaksi);
