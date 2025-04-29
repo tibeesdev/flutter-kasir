@@ -5,6 +5,7 @@ import 'package:sqflite/sqflite.dart';
 import 'package:kasirapp2/widgets_assets/main_page.dart';
 import 'package:kasirapp2/database_handler/database_instance.dart';
 import 'package:kasirapp2/database_handler/database_model.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 void main() {
   runApp(const MyApp());
@@ -53,6 +54,9 @@ class _MyHomePageState extends State<MyHomePage> {
     // load database
     loadDatabase();
 
+    // izin akses penyimpanan
+    requestStoragePermission();
+
     // TODO: implement initState
     super.initState();
   }
@@ -93,6 +97,14 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       load_status = false;
     });
+  }
+
+  // izin akses penyimpanan
+  Future<void> requestStoragePermission() async {
+    var status = await Permission.storage.status;
+    if (!status.isGranted) {
+      await Permission.storage.request();
+    }
   }
 
   @override

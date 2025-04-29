@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:kasirapp2/database_handler/database_instance.dart';
 import 'package:kasirapp2/database_handler/database_model.dart';
 import 'package:kasirapp2/transaction_provider.dart';
 import 'package:pdf/pdf.dart';
@@ -26,6 +28,9 @@ class InvoicePage extends StatefulWidget {
 
 class _InvoicePageState extends State<InvoicePage> {
   String pdfPath = '';
+  String tanggal_transaksi = '';
+  DatabaseInstance databaseInstance = DatabaseInstance();
+  bool _isLoading = true;
 
   //TransactionsModel data_transaksi = dataBaseNotifier.data_transaksi_kode;
   List<ProductsTransactionsModel> data_produk = [ProductsTransactionsModel()];
@@ -33,26 +38,55 @@ class _InvoicePageState extends State<InvoicePage> {
 
   @override
   void initState() {
-    // inisiasi data transaksi
-    widget.dataBaseNotifier.fetchTransactionProducts(widget.kode_transaksi);
-    // ambil semua data yang diperlukan untuk membuat invoice
-    data_transaksi =
-        widget.dataBaseNotifier.data_transaksi_kode; // data transaksi
-    data_produk = widget.dataBaseNotifier.data_produk_kode; // data produk
-
     super.initState();
     // Generate PDF automatically on page load
+    // inisiasi data transaksi
+    widget.dataBaseNotifier.fetchTransactionProducts(widget.kode_transaksi);
+    //dapatkan data tanngal transaksi
+    _dataTransaksi();
+  }
+
+  // dapatkan data transaksi
+  Future _dataTransaksi() async {
+    // data transaksi
+    data_transaksi = await databaseInstance.showTransactionsByKode(
+      widget.kode_transaksi,
+    );
+    // data produk
+    data_produk = await databaseInstance.showProductsTransactionsByKode(
+      widget.kode_transaksi,
+    );
+    print(data_produk.length.toString());
+
+    String rawdate = data_transaksi.kode_transaksi!.split('_')[0].trim();
+    DateTime datetime = DateTime(
+      int.parse(rawdate.substring(0, 4)), // year
+      int.parse(rawdate.substring(4, 6)), // month
+      int.parse(rawdate.substring(6, 8)), // day
+      int.parse(rawdate.substring(8, 10)), // hour
+      int.parse(rawdate.substring(10, 12)), // minute
+      int.parse(rawdate.substring(12, 14)), // second
+    ); // manual parsing untuk datetime
+
+    tanggal_transaksi = DateFormat(
+      "dd-MMM-yyyy HH:mm",
+    ).format(datetime); // tanggal transaksi untuk dimasukkan ke dalam invoice
+
+    // fetch data
+
+    print('data $tanggal_transaksi');
+
+    print('data transaksi ${data_transaksi.total_keuntungan}');
 
     _generatePdf();
   }
 
   // buat pdf
   Future<void> _generatePdf() async {
-    print('pdf sedang dibuat');
     final pdf = pw.Document();
     var data = {
-      'invoice_no': '{data_transaksi.kode_transaksi}',
-      'date': '2023-10-01',
+      'invoice_id': '${data_transaksi.kode_transaksi}',
+      'date': '${tanggal_transaksi}',
       'items': [
         {'name': 'Item 1', 'quantity': 2, 'unit_price': 10.0, 'total': 20.0},
         {'name': 'Item 2', 'quantity': 1, 'unit_price': 15.0, 'total': 15.0},
@@ -79,11 +113,26 @@ class _InvoicePageState extends State<InvoicePage> {
     );
 
     // Save the PDF to a temporary file
-    final dir = await getTemporaryDirectory();
-    final file = File("${dir.path}/invoice.pdf");
+    final tempdir = await getTemporaryDirectory();
+    final dir = await getExternalStorageDirectory();
+    final invoiceDir = Directory('${dir!.path}/invoice');
+    // Pastikan direktori ada, kalau belum maka dibuat
+    if (!await invoiceDir.exists()) {
+      await invoiceDir.create(recursive: true); // recursive penting!
+    }
+    final f = File('${invoiceDir.path}/inv.pdf');
+    await f.writeAsBytes(await pdf.save());
+    print(f.toString());
+
+    final file = File("${tempdir.path}/invoice.pdf");
+
     await file.writeAsBytes(await pdf.save());
     setState(() {
-      pdfPath = file.path; // Update the pdfPath state variable
+      pdfPath = f.path; // Update the pdfPath state variable
+    });
+    setState(() {
+      _isLoading = false;
+      print(_isLoading.toString());
     });
   }
 
@@ -129,25 +178,6 @@ class _InvoicePageState extends State<InvoicePage> {
     );
   }
 
-  // simpan file pdf sementara
-  Future<void> _savePdf() async {
-    var data = {
-      'invoice_no': 'INV-001',
-      'date': '2023-10-01',
-      'items': [
-        {'name': 'Item 1', 'quantity': 2, 'unit_price': 10.0, 'total': 20.0},
-        {'name': 'Item 2', 'quantity': 1, 'unit_price': 15.0, 'total': 15.0},
-      ],
-      'total': 35.0,
-    };
-    final dir = await getTemporaryDirectory();
-    final file = File("${dir.path}/invoice.pdf");
-    await file.writeAsBytes(await InvoiceGenerator(data).generateInvoice());
-    setState(() {
-      pdfPath = file.path;
-    });
-  }
-
   //release resource
   @override
   void dispose() {
@@ -156,6 +186,7 @@ class _InvoicePageState extends State<InvoicePage> {
       final file = File(pdfPath);
       if (file.existsSync()) {
         file.deleteSync();
+        print('file telah dihapus');
       }
     }
     super.dispose();
@@ -193,6 +224,9 @@ class _InvoicePageState extends State<InvoicePage> {
             ),
             child: Column(
               children: [
+                _isLoading
+                    ? Text(_isLoading.toString())
+                    : Text(_isLoading.toString()),
                 //debug
                 Text(
                   widget
@@ -202,8 +236,14 @@ class _InvoicePageState extends State<InvoicePage> {
                       .toString(),
                 ),
 
-                if (pdfPath.isNotEmpty)
-                  Container(height: 700, child: PDFView(filePath: pdfPath)),
+                _isLoading
+                    ? CircularProgressIndicator()
+                    : File(pdfPath).existsSync()
+                    ? Container(
+                      constraints: BoxConstraints(maxHeight: 300),
+                      child: PDFView(filePath: pdfPath),
+                    )
+                    : Text('PDF tidak ditemukan'),
 
                 //Container(height: 700, child: PDFView(filePath: pdfPath)),
               ],
