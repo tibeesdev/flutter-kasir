@@ -141,6 +141,7 @@ class DatabaseInstance {
 
   // produk transaksi
   Future<int> insertProductsTransactions(Map<String, dynamic> row) async {
+    print(row);
     final query = await database().then(
       (db) => db.insert(tabel_produk_transaksi, row),
     );
@@ -149,7 +150,9 @@ class DatabaseInstance {
 
   // fetch data berdasarkan kode
   //kode trnasksi
-  Future showTransactionsByKode(String kode_transaksi) async {
+  Future<TransactionsModel> showTransactionsByKode(
+    String kode_transaksi,
+  ) async {
     final db = await database();
     final query = await db.query(
       tabel_transaksi,
@@ -216,7 +219,6 @@ class DatabaseInstance {
     );
     return query;
   }
-
 
   // hapus data
   // hapus produk berdasarkana kode

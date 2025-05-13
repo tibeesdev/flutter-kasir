@@ -319,7 +319,7 @@ class informasiTransaksi extends StatefulWidget {
 class _informasiTransaksiState extends State<informasiTransaksi> {
   // inisiasi database
   DatabaseInstance databaseInstance = DatabaseInstance();
-  
+
   @override
   Widget build(BuildContext context) {
     return widget.data_transaksi.length == 0
@@ -337,10 +337,13 @@ class _informasiTransaksiState extends State<informasiTransaksi> {
                 onTap: () async {
                   final String kode_transaksi_tap =
                       widget.data_transaksi[index].kode_transaksi!;
-                  print(kode_transaksi_tap);
-                  TransactionsModel data = await databaseInstance
+
+                  TransactionsModel data_transaksi = await databaseInstance
                       .showTransactionsByKode(kode_transaksi_tap);
-                  print(data.pelanggan_transaksi);
+                  List<ProductsTransactionsModel> data_produk =
+                      await databaseInstance.showProductsTransactionsByKode(
+                        kode_transaksi_tap,
+                      );
 
                   // page informasi transaksi
                   Navigator.push(
@@ -350,7 +353,8 @@ class _informasiTransaksiState extends State<informasiTransaksi> {
                           (context) => InvoicePage(
                             kode_transaksi: kode_transaksi_tap,
                             dataBaseNotifier: widget.dataBaseNotifier,
-                            
+                            data_produk: data_produk,
+                            data_transaksi: data_transaksi,
                           ),
                     ),
                   );

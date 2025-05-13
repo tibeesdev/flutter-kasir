@@ -69,10 +69,9 @@ class _MyHomePageState extends State<MyHomePage> {
   // fetch produk transaksi
   Future fetchProductsTransactions() async {
     // ambil data transaksi produk
-    List<ProductsTransactionsModel> produk_transaksi =
-        await databaseInstance.showAllTransactionsProducts();
+    //List<ProductsTransactionsModel> produk_transaksi =await databaseInstance.showAllTransactionsProducts();
     setState(() {
-      data_produk_transaksi = produk_transaksi;
+      //data_produk_transaksi = produk_transaksi;
     });
   }
 
@@ -141,9 +140,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 'pelanggan_transaksi': 'test transaksi',
                 'kode_transaksi': 'kode 1',
               });
-              print(kode.toString());
+
               dataBaseNotifier.fetchTransactions();
-              print(dataBaseNotifier.data_transaksi.length);
             },
           ),
         ],

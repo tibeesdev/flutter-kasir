@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
 
 import 'package:flutter/material.dart';
@@ -76,9 +77,8 @@ class _TransactionPageState extends State<TransactionPage> {
     if (data_index != -1) {
       setState(() {
         int item = produk.jumlah_item!;
-        print(item);
+
         list_produk[data_index].jumlah_item = item;
-        print(list_produk[data_index].jumlah_item);
         // jika jumlah item 0 maka remove saja dari list
         if (item == 0) {
           list_produk.removeAt(data_index);
@@ -88,6 +88,18 @@ class _TransactionPageState extends State<TransactionPage> {
     } else {
       // jika data tdak ditemukan
       setState(() {
+        // cari produk di original_data_produk berdasarkan kode_barang
+        int index = original_data_produk.indexWhere(
+          (data) => data.kode_barang == produk.kode_barang,
+        );
+        if (index != -1) {
+          // set harga_barang dan modal_barang dari original_data_produk
+          produk.harga_barang = original_data_produk[index].harga_barang;
+          produk.modal_barang = original_data_produk[index].modal_barang;
+          // set nama_barang dari original_data_produk
+          produk.nama_barang =
+              original_data_produk[index].nama_barang.toString();
+        }
         list_produk.add(produk);
       });
     }
@@ -122,6 +134,7 @@ class _TransactionPageState extends State<TransactionPage> {
     total_modal = local_modal;
     total_harga = local_harga;
     total_keuntungan_bersih = local_keuntungan;
+    print('harga : $local_modal');
   }
 
   void getRandomFormattedString() {
@@ -137,11 +150,29 @@ class _TransactionPageState extends State<TransactionPage> {
   // remap data transaksi agar bisa diinput
   // fungsi diapnggil di tombol simpan
   void addTransaction() {
+    if (kDebugMode) {
+      list_produk.forEach((element) {
+        print('kode barang ${element.harga_barang}');
+        print('jumlah item ${element.modal_barang}');
+      });
+    }
+    // data produk yang dibeli dalam bentuk list producttranssactionmodel
+    List<ProductsTransactionsModel> purchased_products = [];
     // for loop untuk hitung setiap item
     for (ProductsTransactionsModel element in list_produk) {
-      // car index untuk produk dengan kode yang sama
+      // cari index untuk produk dengan kode yang sama
       int data_index = original_data_produk.indexWhere(
         (data) => data.kode_barang == element.kode_barang,
+      );
+
+      purchased_products.add(
+        ProductsTransactionsModel(
+          kode_barang: original_data_produk[data_index].kode_barang,
+          nama_barang: original_data_produk[data_index].nama_barang,
+          harga_barang: original_data_produk[data_index].harga_barang,
+          modal_barang: original_data_produk[data_index].modal_barang,
+          jumlah_item: element.jumlah_item,
+        ),
       );
     }
     TransactionsModel transaksi = TransactionsModel(
@@ -154,6 +185,7 @@ class _TransactionPageState extends State<TransactionPage> {
     );
     // input produk transaksi menggunakan database notifier
     widget.dataBaseNotifier.insertProductsTransaction(list_produk);
+    print('harga barang ${list_produk[0].harga_barang}');
     // input transaksi menggunakan database notifier
     widget.dataBaseNotifier.insertTransaction({
       'total_modal': transaksi.total_modal,
@@ -166,8 +198,6 @@ class _TransactionPageState extends State<TransactionPage> {
     getRandomFormattedString();
     // refetch database
     widget.dataBaseNotifier.fetchTransactions();
-
-    print('berhasil input transaksi');
   }
 
   // untuk filter list sesuai dengan input user

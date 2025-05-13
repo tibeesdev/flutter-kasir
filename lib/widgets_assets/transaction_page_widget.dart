@@ -392,184 +392,181 @@ class _ListProductsState extends State<ListProducts> {
               color: Color.fromARGB(255, 255, 255, 255),
               border: Border.all(color: Color(0xFF6e8aff), width: 2),
             ),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                // nama barang dan id
-                Expanded(
-                  flex: 20,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      // nama barang
-                      Container(
-                        padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
-                        child: Text(
-                          data.nama_barang.toString(),
-                          style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w500,
-                            overflow: TextOverflow.clip,
-                          ),
-                        ),
-                      ),
-
-                      // id transaksi
-                      Container(
-                        padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
-                        child: Text(
-                          data.kode_barang.toString(),
-                          style: TextStyle(
-                            fontSize: 10,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-
-                // harga barang
-                Expanded(
-                  flex: 20,
-                  child: Center(
-                    child: Text(
-                      data.harga_barang.toString(),
-                      style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-                ),
-
-                // jumlah item
-                Expanded(
-                  flex: 20,
-                  child: Center(
-                    child: Row(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  // nama barang dan id
+                  Expanded(
+                    flex: 20,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        // tombol kurang
-                        Expanded(
-                          flex: 1,
-                          child: IconButton(
-                            onPressed: () {
-                              // ubah menjadi int
-                              if (int.tryParse(item_controller.text) == null) {
-                                item_controller.text = '0';
-                              }
-                              ;
-                              // kurangi angka jika angka tidak kurang dari 0
-                              if (int.parse(item_controller.text) > 0) {
-                                int item_kurang =
-                                    int.parse(item_controller.text) - 1;
-                                // masukkan ke controller
-                                setState(() {
-                                  item_controller.text = item_kurang.toString();
-                                });
-
-                                // format data
-                                ProductsTransactionsModel produk_transaksi =
-                                    ProductsTransactionsModel(
-                                      jumlah_item: int.parse(
-                                        item_controller.text,
-                                      ),
-                                      kode_barang: data.kode_barang,
-                                      kode_transaksi: widget.kode_transaksi,
-                                    );
-                                // masukkan data ke parent class
-                                widget.onChangeProductList(produk_transaksi);
-                              } else {
-                                //print('data 0');
-                                // format data
-                                ProductsTransactionsModel produk_transaksi =
-                                    ProductsTransactionsModel(
-                                      jumlah_item: int.parse(
-                                        item_controller.text,
-                                      ),
-                                      kode_barang: data.kode_barang,
-                                      kode_transaksi: widget.kode_transaksi,
-                                    );
-                                // masukkan data ke parent class
-                                widget.onChangeProductList(produk_transaksi);
-                              }
-                              print(item_controller.text);
-
-                              // callback fungsi untuk update data
-                              // widget.onUpdateController(
-                              //   item_controller,
-                              //   item_kurang.toString(),
-                              // );
-                            },
-                            icon: Icon(Icons.remove),
-                          ),
-                        ),
-
-                        // formfield untuk jumlah barang
-                        Expanded(
-                          flex: 2,
-                          child: TextField(
-                            controller: item_controller,
-                            textAlign: TextAlign.center,
-                            keyboardType:
-                                TextInputType.number, // Untuk input angka
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(),
+                        // nama barang
+                        Container(
+                          padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
+                          child: Text(
+                            data.nama_barang.toString(),
+                            style: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w500,
+                              overflow: TextOverflow.clip,
                             ),
-                            onChanged: (value) {
-                              setState(() {
-                                item_controller.text = value;
-                                // cek jika value != 0 maka masukkan ke dalam list
-                                if (item_controller.text != 0) {
-                                  //list_
-                                }
-                              });
-                            },
                           ),
                         ),
 
-                        // tombol tambah
-                        Expanded(
-                          flex: 1,
-                          child: IconButton(
-                            onPressed: () {
-                              // ubah menjadi int
-                              if (int.tryParse(item_controller.text) == null) {
-                                item_controller.text = '0';
-                              }
-                              ;
-                              // tambah angka
-                              int item_tambah =
-                                  int.parse(item_controller.text) + 1;
-                              // masukkan ke controller
-                              setState(() {
-                                item_controller.text = item_tambah.toString();
-                              });
-                              ProductsTransactionsModel produk_transaksi =
-                                  ProductsTransactionsModel(
-                                    jumlah_item: int.parse(
-                                      item_controller.text,
-                                    ),
-                                    kode_barang: data.kode_barang,
-                                    kode_transaksi: widget.kode_transaksi,
-                                  );
-                              // masukkan data ke parent class
-                              widget.onChangeProductList(produk_transaksi);
-                              // widget.onUpdateController(
-                              //   item_controller,
-                              //   item_tambah.toString(),
-                              // );
-                            },
-                            icon: Icon(Icons.add),
+                        // id transaksi
+                        Container(
+                          padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
+                          child: Text(
+                            data.kode_barang.toString(),
+                            style: TextStyle(
+                              fontSize: 10,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
                       ],
                     ),
                   ),
-                ),
-              ],
+
+                  // harga barang
+                  Expanded(
+                    flex: 20,
+                    child: Center(
+                      child: Text(
+                        data.harga_barang.toString(),
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  // jumlah item
+                  Expanded(
+                    flex: 20,
+                    child: Center(
+                      child: Row(
+                        children: [
+                          // tombol kurang
+                          Expanded(
+                            flex: 1,
+                            child: IconButton(
+                              onPressed: () {
+                                // ubah menjadi int
+                                if (int.tryParse(item_controller.text) ==
+                                    null) {
+                                  item_controller.text = '0';
+                                }
+                                ;
+                                // kurangi angka jika angka tidak kurang dari 0
+                                if (int.parse(item_controller.text) > 0) {
+                                  int item_kurang =
+                                      int.parse(item_controller.text) - 1;
+                                  // masukkan ke controller
+                                  setState(() {
+                                    item_controller.text =
+                                        item_kurang.toString();
+                                  });
+
+                                  // format data
+                                  ProductsTransactionsModel produk_transaksi =
+                                      ProductsTransactionsModel(
+                                        jumlah_item: int.parse(
+                                          item_controller.text,
+                                        ),
+                                        kode_barang: data.kode_barang,
+                                        kode_transaksi: widget.kode_transaksi,
+                                      );
+                                  // masukkan data ke parent class
+                                  widget.onChangeProductList(produk_transaksi);
+                                } else {
+                                  ProductsTransactionsModel produk_transaksi =
+                                      ProductsTransactionsModel(
+                                        jumlah_item: int.parse(
+                                          item_controller.text,
+                                        ),
+                                        kode_barang: data.kode_barang,
+                                        kode_transaksi: widget.kode_transaksi,
+                                      );
+                                  // masukkan data ke parent class
+                                  widget.onChangeProductList(produk_transaksi);
+                                }
+                              },
+                              icon: Icon(Icons.remove),
+                            ),
+                          ),
+
+                          // formfield untuk jumlah barang
+                          Expanded(
+                            flex: 2,
+                            child: TextField(
+                              controller: item_controller,
+                              textAlign: TextAlign.center,
+                              keyboardType:
+                                  TextInputType.number, // Untuk input angka
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(),
+                              ),
+                              onChanged: (value) {
+                                setState(() {
+                                  item_controller.text = value;
+                                  // cek jika value != 0 maka masukkan ke dalam list
+                                  if (item_controller.text != 0) {
+                                    //list_
+                                  }
+                                });
+                              },
+                            ),
+                          ),
+
+                          // tombol tambah
+                          Expanded(
+                            flex: 1,
+                            child: IconButton(
+                              onPressed: () {
+                                // ubah menjadi int
+                                if (int.tryParse(item_controller.text) ==
+                                    null) {
+                                  item_controller.text = '0';
+                                }
+                                ;
+                                // tambah angka
+                                int item_tambah =
+                                    int.parse(item_controller.text) + 1;
+                                // masukkan ke controller
+                                setState(() {
+                                  item_controller.text = item_tambah.toString();
+                                });
+                                ProductsTransactionsModel produk_transaksi =
+                                    ProductsTransactionsModel(
+                                      jumlah_item: int.parse(
+                                        item_controller.text,
+                                      ),
+                                      kode_barang: data.kode_barang,
+                                      kode_transaksi: widget.kode_transaksi,
+                                    );
+                                // masukkan data ke parent class
+                                widget.onChangeProductList(produk_transaksi);
+                                // widget.onUpdateController(
+                                //   item_controller,
+                                //   item_tambah.toString(),
+                                // );
+                              },
+                              icon: Icon(Icons.add),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           );
         },

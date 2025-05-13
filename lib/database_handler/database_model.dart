@@ -54,8 +54,8 @@ class TransactionsModel {
 
 // model untuk produk
 class ProductsTransactionsModel {
-  int? id, jumlah_item;
-  String? kode_barang, kode_transaksi, harga_barang, modal_barang, nama_barang;
+  int? id, jumlah_item,harga_barang, modal_barang;
+  String? kode_barang, kode_transaksi, nama_barang;
 
   ProductsTransactionsModel({
     this.id,
