@@ -208,7 +208,7 @@ class DatabaseInstance {
     return query;
   }
 
-  // update transaksi
+  // update produk
   Future<int> updateProduct(Map<String, dynamic> row) async {
     final db = await database();
     final query = await db.update(
@@ -216,6 +216,23 @@ class DatabaseInstance {
       row,
       where: '$produk_kode = ?',
       whereArgs: [row[produk_kode]],
+    );
+    return query;
+  }
+
+  // update jumlah produk sesuai dengan kode produk
+  Future<int> updateProductStock(String kode_barang, int stok_baru) async {
+    final db = await database();
+    final stok_lama = await db.rawQuery(
+      '''SELECT $produk_stok FROM $tabel_produk WHERE $produk_kode = ?''',
+      [kode_barang],
+    );
+    final updated_stok = (stok_lama[0]['$produk_stok'] as int) - stok_baru;
+    final query = await db.update(
+      tabel_produk,
+      {produk_stok: updated_stok},
+      where: '$produk_kode = ?',
+      whereArgs: [kode_barang],
     );
     return query;
   }

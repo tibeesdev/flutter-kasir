@@ -1,15 +1,8 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:kasirapp2/database_handler/database_instance.dart';
 import 'package:kasirapp2/database_handler/database_model.dart';
 import 'package:kasirapp2/transaction_provider.dart';
 import 'package:kasirapp2/widgets_assets/invoice_page_widget.dart';
-import 'package:pdf/pdf.dart';
-import 'package:pdf/widgets.dart' as pw;
-import 'dart:io';
-import 'package:path_provider/path_provider.dart';
-import 'package:flutter_pdfview/flutter_pdfview.dart';
 
 class InvoicePage extends StatefulWidget {
   InvoicePage({
@@ -44,8 +37,7 @@ class _InvoicePageState extends State<InvoicePage> {
 
     bool value =
         data_transaksi.kode_transaksi ==
-        data_produk_transaksi[0].kode_transaksi;
-    print('data $value');
+        data_produk_transaksi[0].kode_transaksi;;
     return value;
   }
 

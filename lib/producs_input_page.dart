@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:kasirapp2/transaction_provider.dart';
 import 'widgets_assets/products_input_page_widget.dart';
 import 'database_handler/database_instance.dart';
-import 'database_handler/database_model.dart';
 
 class InputProductsPage extends StatefulWidget {
   InputProductsPage({super.key, required this.dataBaseNotifier});
@@ -24,7 +23,6 @@ class _InputProductsPageState extends State<InputProductsPage> {
   // load produk
   Future loadDatabase() async {
     await Future.wait([widget.dataBaseNotifier.fetchProducts()]);
-    print('berhasil load database produk');
     setState(() {
       isLoading = false;
     });

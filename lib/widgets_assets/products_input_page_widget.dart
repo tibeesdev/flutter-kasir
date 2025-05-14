@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kasirapp2/database_handler/database_instance.dart';
 import 'package:kasirapp2/database_handler/database_model.dart';
-import 'package:kasirapp2/main.dart';
 import 'package:kasirapp2/transaction_page.dart';
 import 'package:kasirapp2/transaction_provider.dart';
 

@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kasirapp2/database_handler/database_model.dart';
-import 'package:kasirapp2/main.dart';
 import 'package:kasirapp2/producs_input_page.dart';
 import 'package:kasirapp2/transaction_provider.dart';
-import 'package:intl/intl.dart';
-import 'dart:math';
 
 // card informasi transaks berisi pengeluaran, pemasukan dan total
 // class dipanggi di transaction_page

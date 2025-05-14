@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:kasirapp2/transaction_provider.dart';
-import 'package:path/path.dart';
-import 'package:sqflite/sqflite.dart';
 import 'package:kasirapp2/widgets_assets/main_page.dart';
 import 'package:kasirapp2/database_handler/database_instance.dart';
 import 'package:kasirapp2/database_handler/database_model.dart';
@@ -61,6 +59,13 @@ class _MyHomePageState extends State<MyHomePage> {
     super.initState();
   }
 
+  @override
+  void dispose() {
+
+    // TODO: implement dispose
+    super.dispose();
+  }
+
   // data dari database
   List<ProductsTransactionsModel> data_produk_transaksi =
       []; //list data produuk transaksi
@@ -84,15 +89,13 @@ class _MyHomePageState extends State<MyHomePage> {
     // ambil data transaksi produk
     fetchProductsTransactions();
 
-    print('berhasil fetch database');
     return true;
   }
 
   // load database
   Future loadDatabase() async {
     await Future.wait([fetchDatabase()]);
-    // debug
-    print('berhasil load database');
+    
     setState(() {
       load_status = false;
     });

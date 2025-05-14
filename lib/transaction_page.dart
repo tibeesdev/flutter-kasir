@@ -1,5 +1,4 @@
 import 'dart:math';
-import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
 
 import 'package:flutter/material.dart';
@@ -82,7 +81,6 @@ class _TransactionPageState extends State<TransactionPage> {
         // jika jumlah item 0 maka remove saja dari list
         if (item == 0) {
           list_produk.removeAt(data_index);
-          print(data_index.toString());
         }
       });
     } else {
@@ -105,7 +103,6 @@ class _TransactionPageState extends State<TransactionPage> {
     }
     transactionCounter();
 
-    print('total_modal : $total_modal');
   }
 
   // hitung modal, keuntungan dan harga total
@@ -134,7 +131,6 @@ class _TransactionPageState extends State<TransactionPage> {
     total_modal = local_modal;
     total_harga = local_harga;
     total_keuntungan_bersih = local_keuntungan;
-    print('harga : $local_modal');
   }
 
   void getRandomFormattedString() {
@@ -150,12 +146,6 @@ class _TransactionPageState extends State<TransactionPage> {
   // remap data transaksi agar bisa diinput
   // fungsi diapnggil di tombol simpan
   void addTransaction() {
-    if (kDebugMode) {
-      list_produk.forEach((element) {
-        print('kode barang ${element.harga_barang}');
-        print('jumlah item ${element.modal_barang}');
-      });
-    }
     // data produk yang dibeli dalam bentuk list producttranssactionmodel
     List<ProductsTransactionsModel> purchased_products = [];
     // for loop untuk hitung setiap item
@@ -185,7 +175,6 @@ class _TransactionPageState extends State<TransactionPage> {
     );
     // input produk transaksi menggunakan database notifier
     widget.dataBaseNotifier.insertProductsTransaction(list_produk);
-    print('harga barang ${list_produk[0].harga_barang}');
     // input transaksi menggunakan database notifier
     widget.dataBaseNotifier.insertTransaction({
       'total_modal': transaksi.total_modal,
@@ -194,6 +183,17 @@ class _TransactionPageState extends State<TransactionPage> {
       'pelanggan_transaksi': transaksi.pelanggan_transaksi,
       'kode_transaksi': transaksi.kode_transaksi,
     });
+
+    // update jumlah produk di dalam productmodel untuk menyesuaikan sisa stok
+    for (ProductsTransactionsModel produk in list_produk) {
+      String kode_produk =
+          produk
+              .kode_barang!; // ambil kode produk untuk di cek di dalam database
+      int produk_terjual = produk.jumlah_item!;
+      
+      // update produk sesuai dengan productModel
+      widget.dataBaseNotifier.updateJumlahProduk(kode_produk, produk_terjual);
+    }
     // refresh kode transaksi
     getRandomFormattedString();
     // refetch database
@@ -222,7 +222,6 @@ class _TransactionPageState extends State<TransactionPage> {
               )
               .toList();
     }
-    print(result.length.toString());
 
     data_produk = result;
     setState(() {});

@@ -19,7 +19,8 @@ class DataBaseNotifier extends ChangeNotifier {
   List<ProductsModel> get data_produk => _data_produk;
   List<TransactionsModel> get data_transaksi => _data_transaksi;
   TransactionsModel get data_transaksi_kode => _kode_data_transaksi;
-  List<ProductsTransactionsModel> get data_produk_kode => _kode_produk_transaksi;
+  List<ProductsTransactionsModel> get data_produk_kode =>
+      _kode_produk_transaksi;
 
   // local variabel
   // list data produk dan data transaksi
@@ -39,7 +40,6 @@ class DataBaseNotifier extends ChangeNotifier {
     // ambil data produk
     List<ProductsModel> produk = await _databaseInstance.showAllProducts();
     _data_produk = produk;
-    print('berhasil fetch produk notifier');
     notifyListeners();
   }
 
@@ -57,7 +57,6 @@ class DataBaseNotifier extends ChangeNotifier {
     int local_keuntungan = 0;
     // for loop data transaksi
     List<TransactionsModel> data_transaksi = _data_transaksi;
-    print(data_transaksi.length.toString());
     for (var element in data_transaksi) {
       local_modal = local_modal + element.total_modal!;
       local_harga = local_harga + element.total_harga!;
@@ -68,7 +67,6 @@ class DataBaseNotifier extends ChangeNotifier {
     _total_modal = local_modal;
     _total_keuntungan = local_harga;
     _total_keuntungan_bersih = local_keuntungan;
-    print('berhasil fetch transaksi notifier');
     notifyListeners();
   }
 
@@ -83,7 +81,6 @@ class DataBaseNotifier extends ChangeNotifier {
         .showProductsTransactionsByKode(kode_transaksi);
     _kode_produk_transaksi = produk;
 
-    print('berhasil fetch transaksi dan barang transaksi');
     notifyListeners();
   }
 
@@ -91,7 +88,6 @@ class DataBaseNotifier extends ChangeNotifier {
   // data transaksi
   Future insertTransaction(Map<String, dynamic> row) async {
     int kode = await _databaseInstance.insertTransactions(row);
-    print('status insert transaksi : $kode');
     notifyListeners();
   }
 
@@ -115,14 +111,12 @@ class DataBaseNotifier extends ChangeNotifier {
   // hapus produk berdasarkan kode
   Future deleteProduk(String kode_produk) async {
     int kode = await _databaseInstance.deleteProduct(kode_produk);
-    print('status hapus produk : $kode');
     notifyListeners();
   }
 
   // hapus transaksi
   Future deleteTransaksi(String kode_transaksi) async {
     List<int> kode = await _databaseInstance.deleteTransaction(kode_transaksi);
-    print('status hapus produk : $kode');
     notifyListeners();
   }
 
@@ -131,6 +125,12 @@ class DataBaseNotifier extends ChangeNotifier {
   List<ProductsTransactionsModel> get list_produk => _list_produk;
   void onAddProduct(ProductsTransactionsModel produk) {
     _list_produk.add(produk);
+    notifyListeners();
+  }
+
+  // update jumlah item produk ketika ada yang membeli produk
+  void updateJumlahProduk(String kode_produk, int stok_baru) {
+    _databaseInstance.updateProductStock(kode_produk, stok_baru);
     notifyListeners();
   }
 }
@@ -153,7 +153,6 @@ class TimeFilter extends ChangeNotifier {
 
   void updateFilter(int nilai_baru) {
     _filter_terpilih = nilai_baru;
-    print('filter $filter_terpilih');
     notifyListeners();
   }
 }
