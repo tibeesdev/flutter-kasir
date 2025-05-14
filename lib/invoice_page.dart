@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:kasirapp2/database_handler/database_instance.dart';
 import 'package:kasirapp2/database_handler/database_model.dart';
 import 'package:kasirapp2/transaction_provider.dart';
+import 'package:kasirapp2/widgets_assets/invoice_page_widget.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'dart:io';
@@ -31,6 +32,7 @@ class InvoicePage extends StatefulWidget {
 class _InvoicePageState extends State<InvoicePage> {
   String pdfpath = '';
 
+  // ambil data transaksi dan produknya
   Future<bool> _fetchData() async {
     final databaseinstance = DatabaseInstance();
     TransactionsModel data_transaksi = await databaseinstance
@@ -47,8 +49,41 @@ class _InvoicePageState extends State<InvoicePage> {
     return value;
   }
 
+  // ubah kode transaksi menjadi tanggal
+  String formatKodeTransaksi(String kodeTransaksi) {
+    // Ambil 14 karakter pertama
+    final rawDate = kodeTransaksi.split('_').first;
+
+    if (rawDate.length != 14) return 'Format tidak valid';
+
+    final tahun = rawDate.substring(0, 4);
+    final bulan = rawDate.substring(4, 6);
+    final tanggal = rawDate.substring(6, 8);
+    final jam = rawDate.substring(8, 10);
+    final menit = rawDate.substring(10, 12);
+    final detik = rawDate.substring(12, 14);
+
+    return '$tanggal-$bulan-$tahun $jam:$menit:$detik';
+  }
+
+  // buat total belanja
+  int totalHarga(List<ProductsTransactionsModel> data_produk) {
+    int total = 0;
+    for (ProductsTransactionsModel produk in data_produk) {
+      total += produk.harga_barang! * produk.jumlah_item!;
+    }
+    return total;
+  }
+
   @override
   Widget build(BuildContext context) {
+    // masukkan ke variabel agar mudah dipakai
+    TransactionsModel data_transaksi = widget.data_transaksi;
+    List<ProductsTransactionsModel> data_produk = widget.data_produk;
+
+    // lebar layar
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
@@ -59,11 +94,48 @@ class _InvoicePageState extends State<InvoicePage> {
           icon: Icon(Icons.arrow_back),
         ),
       ),
-      body: Column(
-        children: [
-          Text(widget.data_produk[0].kode_transaksi.toString()),
-          Text(widget.data_transaksi.kode_transaksi.toString()),
-        ],
+      body: Container(
+        constraints: BoxConstraints(minWidth: width - 10),
+        margin: EdgeInsets.all(10),
+        padding: EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(color: Colors.black38),
+        ),
+        child: Column(
+          children: [
+            // kode transaksi
+            KodeTransaksi(
+              judul: 'Kode Transaksi',
+              data_transaksi: data_transaksi.kode_transaksi!,
+            ),
+
+            // Tanggal Transaksi
+            // reuse aja widgetnnya karena formatnya sama
+            KodeTransaksi(
+              judul: "Tanggal Transaksi",
+              data_transaksi: formatKodeTransaksi(
+                data_transaksi.kode_transaksi!,
+              ),
+            ),
+
+            // Nama Pembeli
+            // reuse lagi
+            KodeTransaksi(
+              data_transaksi: data_transaksi.pelanggan_transaksi!,
+              judul: 'Pembeli',
+            ),
+
+            // tabel produk
+            TableProduk(data_produk: data_produk),
+
+            // total seluruh transaksi
+            KodeTransaksi(
+              data_transaksi: totalHarga(data_produk).toString(),
+              judul: 'Total Harga',
+            ),
+          ],
+        ),
       ),
     );
   }
